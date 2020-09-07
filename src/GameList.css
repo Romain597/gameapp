@@ -1,0 +1,48 @@
+.GameList {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: flex-start;
+    align-items: stretch;
+    align-content: stretch;
+    text-align: center;
+}
+
+
+.GameList-content {
+    flex: 0 1 100%;
+    align-self: auto;
+    order: 0;
+}
+
+.GameList-row {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: flex-start;
+    align-items: stretch;
+    align-content: stretch;
+    text-align: center;
+}
+
+.GameList-col {
+    flex: 0 1 50%;
+    align-self: auto;
+    order: 0;
+}
+
+.GameList-item {
+    text-align: center;
+}
+
+.GameList-item-title {
+    text-align: center;
+}
+
+.GameList-item-poster {
+    text-align: center;
+    max-width: 100%;
+    height: 55vh;
+}
+
+.GameList-item-description {
+    text-align: center;
+}
