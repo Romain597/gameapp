@@ -4,13 +4,12 @@ import './GameList.css';
 class GameList extends React.Component {
     constructor(props) {
         super(props)
-        this.state = { sortType: this.props.sortType , items: this.props.itemsSorted };
+        this.getItemList = this.getItemList.bind(this)
     }
-    render() {
-        //console.log(this.state.items);
-        let list = this.state.items.map( item =>
+    getItemList() {
+        return this.props.itemsSorted.map( item =>
             <div className="GameList-col">
-                <a href="#" className="GameList-item" key={"item-" + item.num}>
+                <a href="#" className="GameList-item" id={"item-" + item.num} key={item.num}>
                     <p className="GameList-item-title">{item.title}</p>
                     <img className="GameList-item-poster" src={"/" + item.poster} alt={"Affiche de " + item.title} />
                     <p className="GameList-item-date">{"Date de sortie : " + item.releaseDate.toLocaleDateString()}</p>
@@ -18,6 +17,10 @@ class GameList extends React.Component {
                 </a>
             </div>
         );
+    }
+    render() {
+        //console.log(this.state.items);
+        let list = this.getItemList()
         return (
             <div className="GameList">
                 <div className="GameList-content">

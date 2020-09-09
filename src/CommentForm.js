@@ -1,27 +1,29 @@
 import React from 'react';
 import './CommentForm.css';
 
-function TextField ({id,name,value,onchange,children}) {
+//{id,name,value,onchange,children}
+function TextField(props) {
     return (
             <React.Fragment>
                 <div className="CommentForm-col-label">
-                    <label htmlFor={id}>{children}</label>
+                    <label htmlFor={props.id}>{props.children}</label>
                 </div>
                 <div className="CommentForm-col-input">
-                    <input id={id} type="text" name={name} value={value} onChange={onchange}></input>
+                    <input id={props.id} type="text" name={props.name} value={props.value} onChange={props.onchange}></input>
                 </div>
             </React.Fragment>
     );
 }
 
-function TextArea ({id,name,value,onchange,children}) {
+//{id,name,value,onchange,children}
+function TextArea(props) {
     return (
         <React.Fragment>
             <div className="CommentForm-col-label">
-                <label htmlFor={id}>{children}</label>
+                <label htmlFor={props.id}>{props.children}</label>
             </div>
             <div className="CommentForm-col-input">
-                <textarea id={id} name={name} value={value} onChange={onchange}></textarea>
+                <textarea id={props.id} name={props.name} value={props.value} onChange={props.onchange}></textarea>
             </div>
         </React.Fragment>
     );
@@ -31,12 +33,13 @@ class CommentForm extends React.Component {
     constructor(props) {
         super(props)
         this.state = { 
-            commentsLen: this.props.commentsLength,
             author: "",
             text: ""
         };
+        this.handleTextChange = this.handleTextChange.bind(this)
+        this.handleFormSubmit = this.handleFormSubmit.bind(this)
     }
-    handleChange = (e) => {
+    handleTextChange(e) {
         let name = e.target.name
         name = name.replace("comment-","");
         let value = e.target.value
@@ -45,7 +48,7 @@ class CommentForm extends React.Component {
         });
         console.log(this.state);
     }
-    handleSubmit = (e) => {
+    handleFormSubmit(e) {
         e.preventDefault();
         console.log(this.state);
         this.setState({
@@ -55,19 +58,19 @@ class CommentForm extends React.Component {
     }
     render() {
         let separator = '';
-        if(this.state.commentsLen > 0) {
+        if(this.props.commentsLength > 0) {
             separator = <hr />;
         }
         return (
             <React.Fragment>
                 {separator}
-                <form className="CommentForm" onSubmit={this.handleSubmit}>
+                <form className="CommentForm" onSubmit={this.handleFormSubmit}>
                     <div className="CommentForm-content">
                         <div className="CommentForm-row">
-                            <TextField id="input-author" name="comment-author" value={this.state.author} onchange={this.handleChange}>Auteur</TextField>
+                            <TextField id="input-author" name="comment-author" value={this.state.author} onchange={this.handleTextChange}>Auteur</TextField>
                         </div>
                         <div className="CommentForm-row">
-                            <TextArea id="input-comment" name="comment-text" value={this.state.author} onchange={this.handleChange}>Commentaire</TextArea>
+                            <TextArea id="input-comment" name="comment-text" value={this.state.author} onchange={this.handleTextChange}>Commentaire</TextArea>
                         </div>
                         <div className="CommentForm-row">
                             <div className="CommentForm-footer">

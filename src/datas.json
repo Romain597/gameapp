@@ -7,7 +7,7 @@
         "category": "Aventure",
         "poster": "poster-ascv.png",
         "comments": [
-            { "date": "2020-09-08" , "author": "Romain" , "text": "Super impatient !!!" }
+            { "num":1 , "date": "2020-09-08" , "author": "Romain" , "text": "Super impatient !!!" }
         ]
     },
     {

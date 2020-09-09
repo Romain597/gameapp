@@ -4,27 +4,29 @@ import './App.css';
 import GameList from './GameList';
 import GameView from './GameView';
 
-function Home({sortType,items,methodSortByAlphaAsc,methodSortByAlphaDesc,methodSortByDateDesc,methodSortByDateAsc,methodResetSort}) {
+//{sortType,items,sortingMethod}
+function Home(props) {
   return (
     <React.Fragment>
     <header className="sort-wrapper">
-      <button id="sort-alpha-asc" className="btn" onClick={methodSortByAlphaAsc}>Trier par ordre alphabétique croissant</button>
-      <button id="sort-alpha-desc" className="btn" onClick={methodSortByAlphaDesc}>Trier par ordre alphabétique décroissant</button>
-      <button id="sort-date-desc" className="btn" onClick={methodSortByDateDesc}>Trier par date de sortie la plus récente</button>
-      <button id="sort-date-asc" className="btn" onClick={methodSortByDateAsc}>Trier par date de sortie la moins récente</button>
-      <button id="reset" className="btn" onClick={methodResetSort}>Réinitialiser le tri</button>
+      <button id="sort-alpha-asc" className="btn" onClick={props.sortingMethod}>Trier par ordre alphabétique croissant</button>
+      <button id="sort-alpha-desc" className="btn" onClick={props.sortingMethod}>Trier par ordre alphabétique décroissant</button>
+      <button id="sort-date-desc" className="btn" onClick={props.sortingMethod}>Trier par date de sortie la plus récente</button>
+      <button id="sort-date-asc" className="btn" onClick={props.sortingMethod}>Trier par date de sortie la moins récente</button>
+      <button id="reset-sort" className="btn" onClick={props.sortingMethod}>Réinitialiser le tri</button>
     </header>
     <div className="App">
-      <GameList sortType={sortType} itemsSorted={items} />
+      <GameList sortType={props.sortType} itemsSorted={props.items} />
     </div>
     </React.Fragment>
   );
 }
 
-function Single({selectedItem,items}) {
+//{selectedItem,items}
+function Single(props) {
   return (
     <div className="App">
-      <GameView itemNum={selectedItem} items={items} />
+      <GameView itemNum={props.selectedItem} items={props.items} />
     </div>
   );
 }
@@ -32,15 +34,12 @@ function Single({selectedItem,items}) {
 class App extends React.Component {
   constructor(props) {
     super(props)
-    /*this.props.items.forEach(( object , key ) => {
-      let addId = {id: key};
-      this.object = { ...object , ...addId }
-    });*/
     this.state = { sortType: null , items: this.props.items }
-    //this.loadDateObject()
-    console.log(this.state)
+    this.loadDateObject = this.loadDateObject.bind(this)
+    this.handleSortClick = this.handleSortClick.bind(this)
+    //console.log(this.state)
   }
-  loadDateObject = () => {
+  loadDateObject() {
     this.state.items.forEach( (item) => {
       item.releaseDate = this.getDateObject(item.releaseDate)
       item.comments.forEach( comment => comment.date = this.getDateObject(comment.date) );
@@ -58,60 +57,83 @@ class App extends React.Component {
     }
     return dateObj;
   }
-  sortByAlphaAsc = () => {
+  handleSortClick(e) {
     let itemsSorted = this.state.items;
-    itemsSorted.sort((a,b)=>{
+    let type = this.state.sortType;
+    let method;
+    //console.log(e.target);
+    switch(e.target.id) {
+      case "sort-alpha-asc":
+        type = "alpha-asc";
+        method = this.sortByAlphaAsc();
+      break;
+      case "sort-alpha-desc":
+        type = "alpha-desc";
+        method = this.sortByAlphaDesc();
+      break;
+      case "sort-date-asc":
+        type = "date-asc";
+        method = this.sortByDateAsc();
+      break;
+      case "sort-date-desc":
+        type = "date-desc";
+        method = this.sortByDateDesc();
+      break;
+      case "reset-sort":
+        type = null;
+        method = this.resetSort();
+      break;
+    }
+    //console.log(typeof method);
+    if( typeof method === 'function' ) {
+      itemsSorted.sort(method);
+    }
+    this.setState({ sortType: type , items: itemsSorted })
+  }
+  sortByAlphaAsc() {
+    return ((a,b)=>{
       if(a.title > b.title) {
           return 1;
       } else {
           return -1;
       }
     });
-    this.setState({ sortType: "alpha-asc" , items: itemsSorted })
   }
-  sortByAlphaDesc = () => {
-    let itemsSorted = this.state.items;
-    itemsSorted.sort((a,b)=>{
+  sortByAlphaDesc() {
+    return ((a,b)=>{
       if(a.title < b.title) {
           return 1;
       } else {
           return -1;
       }
     });
-    this.setState({sortType: "alpha-desc" , items: itemsSorted })
   }
-  sortByDateAsc = () => {
-    let itemsSorted = this.state.items;
-    itemsSorted.sort((a,b)=>{
+  sortByDateAsc() {
+    return ((a,b)=>{
       if(a.releaseDate > b.releaseDate) {
           return 1;
       } else {
           return -1;
       }
     });
-    this.setState({ sortType: "date-asc" , items: itemsSorted })
   }
-  sortByDateDesc = () => {
-    let itemsSorted = this.state.items;
-    itemsSorted.sort((a,b)=>{
+  sortByDateDesc() {
+    return ((a,b)=>{
       if(a.releaseDate < b.releaseDate) {
           return 1;
       } else {
           return -1;
       }
     });
-    this.setState({ sortType: "date-desc" , items: itemsSorted })
   }
-  resetSort = () => {
-    let itemsDefault = this.state.items;
-    itemsDefault.sort((a,b)=>{
+  resetSort() {
+    return ((a,b)=>{
       if(a.num > b.num) {
           return 1;
       } else {
           return -1;
       }
     });
-    this.setState({ sortType: null , items: itemsDefault })
   }
   componentDidMount() {
     //init
@@ -122,22 +144,7 @@ class App extends React.Component {
   }
   render() {
     this.loadDateObject()
-    return <Home sortType={this.state.sortType} items={this.state.items} methodSortByAlphaAsc={this.sortByAlphaAsc} methodSortByAlphaDesc={this.sortByAlphaDesc} methodSortByDateDesc={this.sortByDateDesc} methodSortByDateAsc={this.sortByDateAsc} methodResetSort={this.resetSort} />
-
-    /*return (
-      <React.Fragment>
-      <header className="sortbar">
-        <button id="sort-alpha-asc" className="btn" onClick={this.sortByAlphaAsc}>Trier par ordre alphabétique croissant</button>
-        <button id="sort-alpha-desc" className="btn" onClick={this.sortByAlphaDesc}>Trier par ordre alphabétique décroissant</button>
-        <button id="sort-date-desc" className="btn" onClick={this.sortByDateDesc}>Trier par date de sortie la plus récente</button>
-        <button id="sort-date-asc" className="btn" onClick={this.sortByDateAsc}>Trier par date de sortie la moins récente</button>
-        <button id="reset" className="btn" onClick={this.resetSort}>Réinitialiser le tri</button>
-      </header>
-      <div className="App">
-        <GameList sortType={this.state.sortType} itemsSorted={this.state.items} />
-      </div>
-      </React.Fragment>
-    );*/
+    return <Home sortType={this.state.sortType} items={this.state.items} sortingMethod={this.handleSortClick} />
   }
 }
 
