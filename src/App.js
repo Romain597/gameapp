@@ -3,6 +3,13 @@ import React from 'react';
 import './App.css';
 import GameList from './GameList';
 import GameView from './GameView';
+//import { BrowserRouter, Route, Link } from "./node_modules/react-router-dom";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  useParams
+} from "react-router-dom";
 
 //{sortType,items,sortingMethod}
 function Home(props) {
@@ -58,8 +65,8 @@ class App extends React.Component {
     return dateObj;
   }
   handleSortClick(e) {
-    let itemsSorted = this.state.items;
-    let type = this.state.sortType;
+    let itemsSorted;
+    let type;
     let method;
     //console.log(e.target);
     switch(e.target.id) {
@@ -83,6 +90,9 @@ class App extends React.Component {
         type = null;
         method = this.resetSort();
       break;
+      default:
+        itemsSorted = this.state.items;
+        type = this.state.sortType;
     }
     //console.log(typeof method);
     if( typeof method === 'function' ) {
@@ -144,26 +154,15 @@ class App extends React.Component {
   }
   render() {
     this.loadDateObject()
-    return <Home sortType={this.state.sortType} items={this.state.items} sortingMethod={this.handleSortClick} />
+    return (
+      <Router>
+          <Switch>
+            <Route exact path="/GameApp/gameapp/public" render={(props) => (<Home sortType={this.state.sortType} items={this.state.items} sortingMethod={this.handleSortClick} />)} />
+            <Route path="/GameApp/gameapp/public/view/:id" render={(props) => (<Single selectedItem={props.match.params.id} items={this.state.items} />)} />
+          </Switch>
+      </Router>
+    );
   }
 }
 
 export default App;
-
-
-/*
-  link => <Link to="/dashboard">Dashboard</Link>
-    <Router>
-        <Switch>
-          <Route exact path="/">
-            <Home />
-          </Route>
-          <Route path="/about">
-            <About />
-          </Route>
-          <Route path="/dashboard">
-            <Dashboard />
-          </Route>
-        </Switch>
-    </Router>
-*/

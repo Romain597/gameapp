@@ -8,11 +8,17 @@ class GameView extends React.Component {
         this.state = { item: null };
         this.loadItem = this.loadItem.bind(this)
         this.getComments = this.getComments.bind(this)
+        console.log(this.props)
     }
     loadItem() {
-        this.setState( (state,props) => ({ item: props.items.filter( item => item.num === props.itemNum ) }) );
+        this.setState( (state,props) => ({ item: (props.items.filter( item => item.num === parseInt(props.itemNum) ))[0] }) );
+        //this.setState( { item: (this.props.items.filter( item => item.num === 1 ))[0] } );
+        //console.log((this.props.items.filter( item => item.num === 1 ))[0])
+        //console.log(this.state)
     }
     getComments() {
+        //console.log(this.state)
+        this.loadItem()
         let resultComments = <p>Aucun commentaire</p>;
         if( this.state.item.comments.length > 0 ) {
             this.state.item.comments.sort((a,b) =>{
@@ -32,7 +38,6 @@ class GameView extends React.Component {
         return resultComments;
     }
     render() {
-        this.loadItem()
         let comments = this.getComments()
         return (
             <div className="GameView">
