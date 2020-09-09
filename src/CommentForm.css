@@ -1,0 +1,41 @@
+.CommentForm {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: flex-start;
+    align-items: stretch;
+    align-content: stretch;
+    text-align: center;
+}
+
+.CommentForm-content {
+    flex: 0 1 100%;
+    align-self: auto;
+    order: 0;
+}
+
+.CommentForm-row {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: flex-start;
+    align-items: stretch;
+    align-content: stretch;
+    text-align: center;
+}
+
+.CommentForm-col-label {
+    flex: 0 1 30%;
+    align-self: auto;
+    order: 0;
+}
+
+.CommentForm-col-input {
+    flex: 0 1 70%;
+    align-self: auto;
+    order: 0;
+}
+
+.CommentForm-col-footer {
+    flex: 0 1 100%;
+    align-self: auto;
+    order: 0;
+}

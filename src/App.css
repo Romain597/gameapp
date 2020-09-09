@@ -3,10 +3,14 @@
   margin: 0px 20% 0px 20%;
 }
 
-.sortbar {
+.sort-wrapper {
   text-align: center;
 }
 
 .btn {
   text-align: center;
+}
+
+.text-bold {
+  font-weight: bold;
 }

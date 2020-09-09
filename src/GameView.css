@@ -1,4 +1,4 @@
-.GameList {
+.GameView {
     display: flex;
     flex-flow: row wrap;
     justify-content: flex-start;
@@ -7,52 +7,60 @@
     text-align: center;
 }
 
-
-.GameList-content {
+.GameView-content {
     flex: 0 1 100%;
     align-self: auto;
     order: 0;
 }
 
-.GameList-row {
-    display: flex;
-    flex-flow: row wrap;
-    justify-content: flex-start;
-    align-items: stretch;
-    align-content: stretch;
-    text-align: center;
-}
-
-.GameList-col {
-    flex: 0 1 50%;
-    align-self: auto;
-    order: 0;
-}
-
-.GameList-item {
+.GameView-item {
     text-align: center;
     text-decoration: none;
     color: #333;
 }
 
-.GameList-item-title {
+.GameView-item-title {
     text-align: center;
     font-weight: bold;
     margin: 12px 0px;
 }
 
-.GameList-item-poster {
+.GameView-item-poster {
     text-align: center;
     max-width: 100%;
-    height: 55vh;
+    height: 60vh;
 }
 
-.GameList-item-date {
+.GameView-item-date {
     text-align: center;
     margin: 8px 0 4px 0;
 }
 
-.GameList-item-from {
+.GameView-item-from {
     text-align: center;
     margin: 8px 0 4px 0;
+}
+
+.GameView-comments-wrapper {
+    text-align: center;
+}
+
+.GameView-comments {
+    text-align: center;
+}
+
+.GameView-comments-form {
+    text-align: center;
+}
+
+.GameView-comment {
+    text-align: center;
+}
+
+.GameView-comment-author {
+    text-align: center;
+}
+
+.GameView-comment-text {
+    text-align: center;
 }
