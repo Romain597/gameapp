@@ -7,20 +7,19 @@ import GameView from './GameView';
 import {
   BrowserRouter as Router,
   Switch,
-  Route,
-  useParams
+  Route
 } from "react-router-dom";
 
 //{sortType,items,sortingMethod}
 function Home(props) {
   return (
     <React.Fragment>
-    <header className="sort-wrapper">
-      <button id="sort-alpha-asc" className="btn" onClick={props.sortingMethod}>Trier par ordre alphabétique croissant</button>
-      <button id="sort-alpha-desc" className="btn" onClick={props.sortingMethod}>Trier par ordre alphabétique décroissant</button>
-      <button id="sort-date-desc" className="btn" onClick={props.sortingMethod}>Trier par date de sortie la plus récente</button>
-      <button id="sort-date-asc" className="btn" onClick={props.sortingMethod}>Trier par date de sortie la moins récente</button>
-      <button id="reset-sort" className="btn" onClick={props.sortingMethod}>Réinitialiser le tri</button>
+    <header className="App-sort-wrapper row justify-content-around align-items-stretch">
+      <div className="col"><button id="sort-alpha-asc" className="btn btn-success h-100 w-100" onClick={props.sortingMethod}>Trier par ordre alphabétique croissant</button></div>
+      <div className="col"><button id="sort-alpha-desc" className="btn btn-primary h-100 w-100" onClick={props.sortingMethod}>Trier par ordre alphabétique décroissant</button></div>
+      <div className="col"><button id="sort-date-asc" className="btn btn-success h-100 w-100" onClick={props.sortingMethod}>Trier par date de sortie la moins récente</button></div>
+      <div className="col"><button id="sort-date-desc" className="btn btn-primary h-100 w-100" onClick={props.sortingMethod}>Trier par date de sortie la plus récente</button></div>
+      <div className="col"><button id="reset-sort" className="btn btn-danger h-100 w-100" onClick={props.sortingMethod}>Réinitialiser le tri</button></div>
     </header>
     <div className="App">
       <GameList sortType={props.sortType} itemsSorted={props.items} />
@@ -45,6 +44,7 @@ class App extends React.Component {
     this.loadDateObject = this.loadDateObject.bind(this)
     this.handleSortClick = this.handleSortClick.bind(this)
     //console.log(this.state)
+    //console.log(this.props.items);
   }
   loadDateObject() {
     this.state.items.forEach( (item) => {
@@ -65,7 +65,7 @@ class App extends React.Component {
     return dateObj;
   }
   handleSortClick(e) {
-    let itemsSorted;
+    let itemsSorted = this.state.items;
     let type;
     let method;
     //console.log(e.target);
@@ -91,8 +91,8 @@ class App extends React.Component {
         method = this.resetSort();
       break;
       default:
-        itemsSorted = this.state.items;
         type = this.state.sortType;
+        method = null;
     }
     //console.log(typeof method);
     if( typeof method === 'function' ) {

@@ -23,19 +23,36 @@
 }
 
 .CommentForm-col-label {
-    flex: 0 1 30%;
+    flex: 0 1 50%;
     align-self: auto;
     order: 0;
+    text-align: right;
+}
+
+.CommentForm-col-label > label {
+    margin: 8px 4px 4px 4px;
 }
 
 .CommentForm-col-input {
-    flex: 0 1 70%;
+    flex: 0 1 50%;
     align-self: auto;
     order: 0;
+    text-align: left;
+}
+
+.CommentForm-col-input > input, .CommentForm-col-input > textarea {
+    width: 35%;
+    padding: 4px;
+    margin: 4px;
 }
 
 .CommentForm-col-footer {
     flex: 0 1 100%;
     align-self: auto;
     order: 0;
+}
+
+.CommentForm-col-footer > input {
+    margin: 4px;
+    padding: 4px;
 }

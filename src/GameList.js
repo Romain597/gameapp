@@ -10,10 +10,9 @@ class GameList extends React.Component {
         this.getItemList = this.getItemList.bind(this)
     }
     getItemList() {
-        //<a href={} className="GameList-item" id={"item-" + item.num} key={item.num}>
         return this.props.itemsSorted.map( item =>
-            <div className="GameList-col">
-                <Link to={"/GameApp/gameapp/public/view/" + item.num} className="GameList-item" id={"item-" + item.num} key={item.num}>
+            <div className="GameList-col" key={item.num}>
+                <Link to={"/GameApp/gameapp/public/view/" + item.num} className="GameList-item" id={"item-" + item.num}>
                     <p className="GameList-item-title">{item.title}</p>
                     <img className="GameList-item-poster" src={"/" + item.poster} alt={"Affiche de " + item.title} />
                     <p className="GameList-item-date">{"Date de sortie : " + item.releaseDate.toLocaleDateString()}</p>

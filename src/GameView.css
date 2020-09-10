@@ -49,12 +49,47 @@
     text-align: center;
 }
 
+.GameView-comments-title, .GameView-comments-form-title {
+    text-align: center;
+    margin: 20px 0px 20px 0px;
+    border: 2px solid #eee;
+    padding: 8px;
+    border-radius: 5px;
+}
+
 .GameView-comments-form {
     text-align: center;
 }
 
 .GameView-comment {
     text-align: center;
+}
+
+.GameView-comment::before {
+    content: "";
+    display: block;
+	clear: both;
+    padding: 0;
+    border: 0;
+    font-family: arial;
+    text-align: center;
+    font-size: 2px;
+    line-height: 2;
+    height: 2px;
+    width: auto;
+    margin: 20px 4px;
+    color: #eee;
+    background-color: #eee;
+    border-radius: 50%;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    -ms-border-radius: 50%;
+    -o-border-radius: 50%;
+}
+
+.GameView-comment:first-of-type::before {
+    display: none;
+    visibility: hidden;
 }
 
 .GameView-comment-author {

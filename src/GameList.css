@@ -27,12 +27,23 @@
     flex: 0 1 50%;
     align-self: auto;
     order: 0;
+    /*padding: 6px;
+    margin: 10px;*/
+}
+
+.GameList-col:hover {
+    text-align: center;
+    /*background-color: lightgray;*/
 }
 
 .GameList-item {
     text-align: center;
     text-decoration: none;
     color: #333;
+}
+
+.GameList-item:hover {
+    text-decoration: none;
 }
 
 .GameList-item-title {
