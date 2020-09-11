@@ -27,8 +27,8 @@
 
 .GameView-item-poster {
     text-align: center;
-    max-width: 100%;
-    height: 60vh;
+    height: 500px;
+    width: 375px;
 }
 
 .GameView-item-date {

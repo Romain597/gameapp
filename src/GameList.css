@@ -55,7 +55,8 @@
 .GameList-item-poster {
     text-align: center;
     max-width: 100%;
-    height: 55vh;
+    height: 450px;
+    width: 340px;
 }
 
 .GameList-item-date {

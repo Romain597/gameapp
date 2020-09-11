@@ -1,19 +1,17 @@
 import React from 'react';
-//import logo from './logo.svg';
 import './App.css';
 import GameList from './GameList';
 import GameView from './GameView';
-//import { BrowserRouter, Route, Link } from "./node_modules/react-router-dom";
 import {
   BrowserRouter as Router,
   Switch,
   Route
 } from "react-router-dom";
 
-//{sortType,items,sortingMethod}
 function Home(props) {
   return (
     <React.Fragment>
+    <h1 className="text-center">Liste de jeux</h1>
     <header className="App-sort-wrapper row justify-content-around align-items-stretch">
       <div className="col"><button id="sort-alpha-asc" className="btn btn-success h-100 w-100" onClick={props.sortingMethod}>Trier par ordre alphabétique croissant</button></div>
       <div className="col"><button id="sort-alpha-desc" className="btn btn-primary h-100 w-100" onClick={props.sortingMethod}>Trier par ordre alphabétique décroissant</button></div>
@@ -28,7 +26,6 @@ function Home(props) {
   );
 }
 
-//{selectedItem,items}
 function Single(props) {
   return (
     <div className="App">
@@ -40,27 +37,67 @@ function Single(props) {
 class App extends React.Component {
   constructor(props) {
     super(props)
-    this.state = { sortType: null , items: this.props.items }
+    /*if(!localStorage.getItem('items')) {
+      this.state.items.forEach( (item) => {
+        let dateString = item.releaseDate;
+        dateString = dateString.replace(/[Tt].+$/,'');
+        let dateArray = dateString.split('-');
+        let year = parseInt(dateArray[0] , 10);
+        let month = parseInt(dateArray[1] , 10)-1;
+        let day = parseInt(dateArray[2] , 10);
+        let dateObj = new Date(Date.UTC(year,month,day));
+        item.releaseDate = dateObj;
+        item.comments.forEach( (comment) => {
+          dateObj = null; dateString = ''; dateArray = []; year = 0; month = 0; day = 0;
+          dateString = comment.date;
+          dateString = dateString.replace(/[Tt].+$/,'');
+          dateArray = dateString.split('-');
+          year = parseInt(dateArray[0] , 10);
+          month = parseInt(dateArray[1] , 10) - 1;
+          day = parseInt(dateArray[2] , 10);
+          dateObj = new Date(Date.UTC(year,month,day));
+          comment.date = dateObj
+        });
+      });
+      localStorage.setItem("items",JSON.stringify(this.props.items));
+    }*/
+    if(!localStorage.getItem('items')) {
+      localStorage.setItem("items",JSON.stringify(this.props.items));
+    }
+    let itemsStored = JSON.parse(localStorage.getItem('items'));
+    //console.log(itemsStored);
+    this.state = { sortType: null , items: itemsStored } //this.props.items ou itemsStored
     this.loadDateObject = this.loadDateObject.bind(this)
     this.handleSortClick = this.handleSortClick.bind(this)
-    //console.log(this.state)
-    //console.log(this.props.items);
+    this.loadDataInStorage = this.loadDataInStorage.bind(this)
+    this.populateStorage = this.populateStorage.bind(this)
+  }
+  loadDataInStorage() {
+    if(!localStorage.getItem('items')) {
+      this.populateStorage();
+    }
+    let items = JSON.parse(localStorage.getItem('items'));
+    this.setState({ items: items });
+  }
+  populateStorage() {
+    this.loadDateObject()
+    localStorage.setItem("items",JSON.stringify(this.state.items));
   }
   loadDateObject() {
     this.state.items.forEach( (item) => {
       item.releaseDate = this.getDateObject(item.releaseDate)
       item.comments.forEach( comment => comment.date = this.getDateObject(comment.date) );
     });
-    //console.log(this.state.items)
   }
   getDateObject(dateString) {
     let dateObj = dateString;
     if( typeof dateString == "string" ) {
+      dateString = dateString.replace(/[Tt].+$/,'');
       let dateArray = dateString.split('-');
       let year = parseInt(dateArray[0] , 10);
-      let month = parseInt(dateArray[1] , 10)-1;
+      let month = parseInt(dateArray[1] , 10) - 1;
       let day = parseInt(dateArray[2] , 10);
-      dateObj = new Date(year,month,day);
+      dateObj = new Date(Date.UTC(year,month,day));
     }
     return dateObj;
   }
@@ -68,7 +105,6 @@ class App extends React.Component {
     let itemsSorted = this.state.items;
     let type;
     let method;
-    //console.log(e.target);
     switch(e.target.id) {
       case "sort-alpha-asc":
         type = "alpha-asc";
@@ -94,7 +130,6 @@ class App extends React.Component {
         type = this.state.sortType;
         method = null;
     }
-    //console.log(typeof method);
     if( typeof method === 'function' ) {
       itemsSorted.sort(method);
     }
@@ -147,17 +182,17 @@ class App extends React.Component {
   }
   componentDidMount() {
     //init
-    //console.log(this.state)
   }
   componentWillUnmount() {
     //fin de vie
   }
   render() {
     this.loadDateObject()
+    //this.loadDataInStorage()
     return (
       <Router>
           <Switch>
-            <Route exact path="/GameApp/gameapp/public" render={(props) => (<Home sortType={this.state.sortType} items={this.state.items} sortingMethod={this.handleSortClick} />)} />
+            <Route exact path="/GameApp/gameapp/public" render={() => (<Home sortType={this.state.sortType} items={this.state.items} sortingMethod={this.handleSortClick} />)} />
             <Route path="/GameApp/gameapp/public/view/:id" render={(props) => (<Single selectedItem={props.match.params.id} items={this.state.items} />)} />
           </Switch>
       </Router>

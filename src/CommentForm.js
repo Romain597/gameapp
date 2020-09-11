@@ -1,8 +1,6 @@
 import React from 'react';
 import './CommentForm.css';
-import Datas from './datas.json';
 
-//{id,name,value,onchange,children}
 function TextField(props) {
     return (
             <React.Fragment>
@@ -16,7 +14,6 @@ function TextField(props) {
     );
 }
 
-//{id,name,value,onchange,children}
 function TextArea(props) {
     return (
         <React.Fragment>
@@ -33,64 +30,46 @@ function TextArea(props) {
 class CommentForm extends React.Component {
     constructor(props) {
         super(props)
-        this.state = { 
+        this.state = {
             author: "",
             text: ""
         };
         this.handleTextChange = this.handleTextChange.bind(this)
         this.handleFormSubmit = this.handleFormSubmit.bind(this)
-        this.addComment = this.addComment.bind(this)
     }
     handleTextChange(e) {
         let name = e.target.name
         name = name.replace("comment-","");
         let value = e.target.value
-        //console.log(name,value);
         this.setState({
             [name]: value
         });
-        //console.log(this.state);
     }
     handleFormSubmit(e) {
         e.preventDefault();
-        console.log(this.state);
-        this.addComment();
+        this.props.addComment(this.state.author.trim(),this.state.text.trim());
         this.setState({
             author: "",
             text: ""
         });
     }
-    addComment() {
-        let dateObj = new Date();
-        //let dateString = dateObj.getUTCFullYear() + "-" + dateObj.getUTCMonth() + "-" + dateObj.getUTCDay();
-        let dateString = dateObj.toJSON();
-        let num = parseInt(this.props.commentsLength) + 1;
-        let newComment = { "num":num , "date": dateString , "author": this.state.author , "text": this.state.text };
-        //console.log(Datas);
-        Datas.forEach((item,key) => {
-            if(item.num === this.props.itemNum) {
-                item.comments.push(newComment);
-            }
-        });
-        console.log(JSON.stringify(Datas));
-    }
     render() {
         return (
-                <form className="CommentForm" onSubmit={this.handleFormSubmit}>
-                    <div className="CommentForm-content">
-                        <div className="CommentForm-row">
-                            <TextField id="input-author" name="comment-author" value={this.state.author} onchange={this.handleTextChange}>Auteur</TextField>
-                        </div>
-                        <div className="CommentForm-row">
-                            <TextArea id="input-comment" name="comment-text" value={this.state.text} onchange={this.handleTextChange}>Commentaire</TextArea>
-                        </div>
-                        <div className="CommentForm-row">
-                            <div className="CommentForm-col-footer">
-                                <input type="submit" className="btn btn-primary" value="Valider" />
-                            </div>
+            <form className="CommentForm" onSubmit={this.handleFormSubmit}>
+                <div className="CommentForm-content">
+                    <div className="CommentForm-row">
+                        <TextField id="input-author" name="comment-author" value={this.state.author} onchange={this.handleTextChange}>Auteur</TextField>
+                    </div>
+                    <div className="CommentForm-row">
+                        <TextArea id="input-comment" name="comment-text" value={this.state.text} onchange={this.handleTextChange}>Commentaire</TextArea>
+                    </div>
+                    <div className="CommentForm-row">
+                        <div className="CommentForm-col-footer">
+                            <input type="submit" className="btn btn-primary" value="Valider" />
                         </div>
                     </div>
-                </form>
+                </div>
+            </form>
         );
     }
 }

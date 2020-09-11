@@ -2,19 +2,19 @@
     {
         "num": 1,
         "title": "Assassin's Creed Valhalla",
-        "releaseDate": "2020-11-17T00:00:00.000Z",
+        "releaseDate": "2020-11-10",
         "from": "Ubisoft",
         "category": "Aventure",
         "poster": "poster-ascv.png",
         "comments": [
-            { "num":1 , "date": "2020-09-08T00:00:00.000Z" , "author": "Romain" , "text": "Super impatient !!!" },
-            { "num":2 , "date": "2020-09-02T00:00:00.000Z" , "author": "Romain" , "text": "Super impatient !!!" }
+            { "num":1 , "date": "2020-09-08" , "author": "Romain" , "text": "Vivement la sortie !" },
+            { "num":2 , "date": "2020-09-02" , "author": "Romain" , "text": "Super impatient !!!" }
         ]
     },
     {
         "num": 2,
         "title": "Total War : Three Kingdoms",
-        "releaseDate": "2019-05-23T00:00:00.000Z",
+        "releaseDate": "2019-05-23",
         "from": "Creative Assembly",
         "category": "Stratégie",
         "poster": "poster-tw3k.png",
@@ -23,7 +23,7 @@
     {
         "num": 3,
         "title": "Detroit : Become Human",
-        "releaseDate": "2019-12-12T00:00:00.000Z",
+        "releaseDate": "2019-12-12",
         "from": "Quantic Dream",
         "category": "Aventure",
         "poster": "poster-dbh.png",
