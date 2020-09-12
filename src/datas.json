@@ -28,5 +28,14 @@
         "category": "Aventure",
         "poster": "poster-dbh.png",
         "comments": []
+    },
+    {
+        "num": 4,
+        "title": "Star Wars : Squadrons",
+        "releaseDate": "2020-10-02",
+        "from": "Electronic Arts",
+        "category": "Shooter",
+        "poster": "poster-sws.png",
+        "comments": []
     }
 ]

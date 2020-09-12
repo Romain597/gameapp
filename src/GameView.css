@@ -1,4 +1,34 @@
-.GameView {
+
+.game-view-comment::before {
+    content: "";
+    display: block;
+	clear: both;
+    padding: 0;
+    border: 0;
+    font-family: arial;
+    text-align: center;
+    font-size: 2px;
+    line-height: 2;
+    height: 2px;
+    width: auto;
+    margin: 5px 0px 20px 0px;
+    color: #ddd;
+    background-color: #ddd;
+    border-radius: 50%;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    -ms-border-radius: 50%;
+    -o-border-radius: 50%;
+}
+
+.game-view-comment:first-of-type::before {
+    display: none;
+    visibility: hidden;
+}
+
+
+
+/*.GameView {
     display: flex;
     flex-flow: row wrap;
     justify-content: flex-start;
@@ -98,4 +128,4 @@
 
 .GameView-comment-text {
     text-align: center;
-}
+}*/

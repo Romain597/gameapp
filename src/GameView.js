@@ -2,6 +2,18 @@ import React from 'react';
 import './GameView.css';
 import CommentForm from './CommentForm';
 
+function GameInfo(props) {
+    return (
+        <React.Fragment>
+        <h4 className="col-12 text-center my-2 text-primary user-select-none">{props.item.title}</h4>
+        <img className="col-6 text-center img-fluid my-2" src={"/" + props.item.poster} alt={"Affiche de " + props.item.title} />
+        <p className="col-12 text-center my-2 user-select-none">Date de sortie : <span className="text-primary">{props.item.releaseDate.toLocaleDateString('fr-FR', props.dateOptions)}</span></p>
+        <p className="col-12 text-center my-2 user-select-none">Catégorie : <span className="text-primary">{props.item.category}</span></p>
+        <p className="col-12 text-center my-2 user-select-none">Studio : <span className="text-primary">{props.item.from}</span></p>
+        </React.Fragment>
+    );
+}
+
 class GameView extends React.Component {
     constructor(props) {
         super(props)
@@ -21,9 +33,9 @@ class GameView extends React.Component {
                 }
             });
             resultComments = this.state.item.comments.map( comment =>
-                <div id={"comment-" + comment.num} key={comment.num} className="GameView-comment">
-                        <p className="GameView-comment-author">De <span className="text-color-darkblue">{comment.author}</span> le <span className="text-color-darkblue">{comment.date.toLocaleDateString()}</span></p>
-                        <p className="GameView-comment-text">{comment.text}</p>
+                <div id={"comment-" + comment.num} key={comment.num} className="col-12 game-view-comment">
+                        <p className="user-select-none font-weight-light">De <span className="text-primary font-weight-normal">{comment.author}</span> le <span className="text-secondary font-weight-normal">{comment.date.toLocaleDateString()}</span></p>
+                        <p className="user-select-none">{comment.text}</p>
                 </div>
             );
         }
@@ -55,27 +67,30 @@ class GameView extends React.Component {
         let comments = this.getComments()
         const options = { timeZone: 'UTC', year: 'numeric', month: '2-digit', day: '2-digit' };
         return (
-            <div className="GameView">
-                <div className="GameView-content">
-                    <div className="GameView-item">
-                        <p className="GameView-item-title">{this.state.item.title}</p>
-                        <img className="GameView-item-poster" src={"/" + this.state.item.poster} alt={"Affiche de " + this.state.item.title} />
-                        <p className="GameView-item-date">{"Date de sortie : " + this.state.item.releaseDate.toLocaleDateString('fr-FR', options)}</p>
-                        <p className="GameView-item-date">{"Catégorie : " + this.state.item.category}</p>
-                        <p className="GameView-item-from">{"Studio : " + this.state.item.from}</p>
+            <article className="row my-5">
+                <div className="col">
+                    <h4 className="text-center user-select-none">Détails du jeux</h4>
+                    <div className="row mb-3 justify-content-center">
+                        <GameInfo item={this.state.item} dateOptions={options} />
                     </div>
-                    <div className="GameView-comments-wrapper">
-                        <div className="GameView-comments">
-                            <h4 className="GameView-comments-title">{this.getCommentsTitle()}</h4>
-                            {comments}
+                    <div className="row mb-3">
+                        <div className="col">
+                            <h5 className="mb-3 mx-n3 p-2 p-2 border rounded border-secondary user-select-none text-center">{this.getCommentsTitle()}</h5>
+                            <div className="row justify-content-center list-group">
+                                {comments}
+                            </div>
                         </div>
-                        <div className="GameView-comments-form">
-                            <h4 className="GameView-comments-form-title">Ajouter un commentaire</h4>
-                            <CommentForm addComment={this.addComment} />
+                    </div>
+                    <div className="row mb-3">
+                        <div className="col">
+                            <h5 className="mb-3 mx-n3 p-2 p-2 border rounded border-secondary user-select-none text-center">Ajouter un commentaire</h5>
+                            <div className="row justify-content-center">
+                                <CommentForm addComment={this.addComment} />
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </article>
         );
     }
 }

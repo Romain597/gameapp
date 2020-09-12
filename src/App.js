@@ -1,5 +1,5 @@
 import React from 'react';
-import './App.css';
+//import './App.css';
 import GameList from './GameList';
 import GameView from './GameView';
 import {
@@ -8,28 +8,42 @@ import {
   Route
 } from "react-router-dom";
 
+function ButtonSort(props) {
+  return (
+    <div className={props.colClass}><button id={props.btnId} className={props.btnClass} onClick={props.sortingMethod}>{props.children}</button></div>
+  );
+}
+
+function ButtonSortList(props) {
+  return (
+    <header className="row justify-content-between align-items-stretch my-4">
+      <ButtonSort colClass="col" btnId="sort-alpha-asc" btnClass="btn btn-success h-100 w-100" sortingMethod={props.sortingMethod}>Trier par ordre alphabétique croissant</ButtonSort>
+      <ButtonSort colClass="col" btnId="sort-alpha-desc" btnClass="btn btn-primary h-100 w-100" sortingMethod={props.sortingMethod}>Trier par ordre alphabétique décroissant</ButtonSort>
+      <ButtonSort colClass="col" btnId="sort-date-asc" btnClass="btn btn-success h-100 w-100" sortingMethod={props.sortingMethod}>Trier par date de sortie croissante</ButtonSort>
+      <ButtonSort colClass="col" btnId="sort-date-desc" btnClass="btn btn-primary h-100 w-100" sortingMethod={props.sortingMethod}>Trier par date de sortie décroissante</ButtonSort>
+      <ButtonSort colClass="col" btnId="reset-sort" btnClass="btn btn-danger h-100 w-100" sortingMethod={props.sortingMethod}>Réinitialiser le tri</ButtonSort>
+    </header>
+  );
+}
+
 function Home(props) {
   return (
-    <React.Fragment>
-    <h1 className="text-center">Liste de jeux</h1>
-    <header className="App-sort-wrapper row justify-content-around align-items-stretch">
-      <div className="col"><button id="sort-alpha-asc" className="btn btn-success h-100 w-100" onClick={props.sortingMethod}>Trier par ordre alphabétique croissant</button></div>
-      <div className="col"><button id="sort-alpha-desc" className="btn btn-primary h-100 w-100" onClick={props.sortingMethod}>Trier par ordre alphabétique décroissant</button></div>
-      <div className="col"><button id="sort-date-asc" className="btn btn-success h-100 w-100" onClick={props.sortingMethod}>Trier par date de sortie la moins récente</button></div>
-      <div className="col"><button id="sort-date-desc" className="btn btn-primary h-100 w-100" onClick={props.sortingMethod}>Trier par date de sortie la plus récente</button></div>
-      <div className="col"><button id="reset-sort" className="btn btn-danger h-100 w-100" onClick={props.sortingMethod}>Réinitialiser le tri</button></div>
-    </header>
     <div className="App">
-      <GameList sortType={props.sortType} itemsSorted={props.items} />
+      <div className="container">
+        <h2 className="text-center mt-3 mb-4 user-select-none">Liste de jeux</h2>
+        <ButtonSortList sortingMethod={props.sortingMethod} />
+        <GameList sortType={props.sortType} itemsSorted={props.items} />
+      </div>
     </div>
-    </React.Fragment>
   );
 }
 
 function Single(props) {
   return (
     <div className="App">
-      <GameView itemNum={props.selectedItem} items={props.items} />
+      <div className="container">
+        <GameView itemNum={props.selectedItem} items={props.items} />
+      </div>
     </div>
   );
 }
@@ -37,51 +51,13 @@ function Single(props) {
 class App extends React.Component {
   constructor(props) {
     super(props)
-    /*if(!localStorage.getItem('items')) {
-      this.state.items.forEach( (item) => {
-        let dateString = item.releaseDate;
-        dateString = dateString.replace(/[Tt].+$/,'');
-        let dateArray = dateString.split('-');
-        let year = parseInt(dateArray[0] , 10);
-        let month = parseInt(dateArray[1] , 10)-1;
-        let day = parseInt(dateArray[2] , 10);
-        let dateObj = new Date(Date.UTC(year,month,day));
-        item.releaseDate = dateObj;
-        item.comments.forEach( (comment) => {
-          dateObj = null; dateString = ''; dateArray = []; year = 0; month = 0; day = 0;
-          dateString = comment.date;
-          dateString = dateString.replace(/[Tt].+$/,'');
-          dateArray = dateString.split('-');
-          year = parseInt(dateArray[0] , 10);
-          month = parseInt(dateArray[1] , 10) - 1;
-          day = parseInt(dateArray[2] , 10);
-          dateObj = new Date(Date.UTC(year,month,day));
-          comment.date = dateObj
-        });
-      });
-      localStorage.setItem("items",JSON.stringify(this.props.items));
-    }*/
     if(!localStorage.getItem('items')) {
       localStorage.setItem("items",JSON.stringify(this.props.items));
     }
     let itemsStored = JSON.parse(localStorage.getItem('items'));
-    //console.log(itemsStored);
-    this.state = { sortType: null , items: itemsStored } //this.props.items ou itemsStored
+    this.state = { sortType: null , items: itemsStored }
     this.loadDateObject = this.loadDateObject.bind(this)
     this.handleSortClick = this.handleSortClick.bind(this)
-    this.loadDataInStorage = this.loadDataInStorage.bind(this)
-    this.populateStorage = this.populateStorage.bind(this)
-  }
-  loadDataInStorage() {
-    if(!localStorage.getItem('items')) {
-      this.populateStorage();
-    }
-    let items = JSON.parse(localStorage.getItem('items'));
-    this.setState({ items: items });
-  }
-  populateStorage() {
-    this.loadDateObject()
-    localStorage.setItem("items",JSON.stringify(this.state.items));
   }
   loadDateObject() {
     this.state.items.forEach( (item) => {
@@ -180,20 +156,13 @@ class App extends React.Component {
       }
     });
   }
-  componentDidMount() {
-    //init
-  }
-  componentWillUnmount() {
-    //fin de vie
-  }
   render() {
     this.loadDateObject()
-    //this.loadDataInStorage()
     return (
       <Router>
           <Switch>
             <Route exact path="/GameApp/gameapp/public" render={() => (<Home sortType={this.state.sortType} items={this.state.items} sortingMethod={this.handleSortClick} />)} />
-            <Route path="/GameApp/gameapp/public/view/:id" render={(props) => (<Single selectedItem={props.match.params.id} items={this.state.items} />)} />
+            <Route path="/GameApp/gameapp/public/view/:gameid" render={(props) => (<Single selectedItem={props.match.params.gameid} items={this.state.items} />)} />
           </Switch>
       </Router>
     );

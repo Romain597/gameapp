@@ -1,8 +1,19 @@
 import React from 'react';
-import './GameList.css';
+//import './GameList.css';
 import {
     Link
   } from "react-router-dom";
+
+function ItemListInfo(props) {
+    return (
+        <React.Fragment>
+        <h6 className="text-center font-weight-bold my-2">{props.item.title}</h6>
+        <img className="text-center w-100 mt-1 img-fluid" src={"/" + props.item.poster} alt={"Affiche de " + props.item.title} />
+        <p className="text-center my-2">{"Date de sortie : " + props.item.releaseDate.toLocaleDateString('fr-FR', props.dateOptions)}</p>
+        <p className="text-center my-2">{"Studio : " + props.item.from}</p>
+        </React.Fragment>
+    );
+}
 
 class GameList extends React.Component {
     constructor(props) {
@@ -17,26 +28,21 @@ class GameList extends React.Component {
     getItemList() {
         const options = { timeZone: 'UTC', year: 'numeric', month: '2-digit', day: '2-digit' };
         return this.props.itemsSorted.map( item =>
-            <div className="GameList-col" key={item.num}>
-                <Link to={"/GameApp/gameapp/public/view/" + item.num} className="GameList-item" id={"item-" + item.num}>
-                    <p className="GameList-item-title">{item.title}</p>
-                    <img className="GameList-item-poster" src={"/" + item.poster} alt={"Affiche de " + item.title} />
-                    <p className="GameList-item-date">{"Date de sortie : " + item.releaseDate.toLocaleDateString('fr-FR', options)}</p>
-                    <p className="GameList-item-from">{"Studio : " + item.from}</p>
-                </Link>
-            </div>
+            <Link to={"/GameApp/gameapp/public/view/" + item.num} key={item.num} className="col-5 m-1 align-self-stretch px-4 py-1 border list-group-item list-group-item-action" id={"item-" + item.num}>
+                <ItemListInfo item={item} dateOptions={options} />
+            </Link>
         );
     }
     render() {
         let list = this.getItemList()
         return (
-            <div className="GameList">
-                <div className="GameList-content">
-                    <div className="GameList-row">
+            <section className="row my-5">
+                <div className="col">
+                    <div className="row justify-content-center align-items-stretch">
                         {list}
                     </div>
                 </div>
-            </div>
+            </section>
         );
     }
 }

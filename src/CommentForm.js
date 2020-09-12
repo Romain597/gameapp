@@ -1,29 +1,29 @@
 import React from 'react';
-import './CommentForm.css';
+//import './CommentForm.css';
 
 function TextField(props) {
     return (
-            <React.Fragment>
-                <div className="CommentForm-col-label">
-                    <label className="form-check-label" htmlFor={props.id}>{props.children}</label>
-                </div>
-                <div className="CommentForm-col-input">
-                    <input id={props.id} type="text" className="form-control" name={props.name} value={props.value} onChange={props.onchange}></input>
-                </div>
-            </React.Fragment>
+            <div className="form-group">
+                <label htmlFor={props.id}>{props.children}</label>
+                <input id={props.id} type="text" className="form-control" name={props.name} value={props.value} onChange={props.onchange}></input>
+            </div>
     );
 }
 
 function TextArea(props) {
     return (
-        <React.Fragment>
-            <div className="CommentForm-col-label">
-                <label className="form-check-label" htmlFor={props.id}>{props.children}</label>
-            </div>
-            <div className="CommentForm-col-input">
-                <textarea id={props.id} name={props.name} value={props.value} onChange={props.onchange}></textarea>
-            </div>
-        </React.Fragment>
+        <div className="form-group">
+            <label htmlFor={props.id}>{props.children}</label>
+            <textarea id={props.id} className="form-control" name={props.name} value={props.value} onChange={props.onchange}></textarea>
+        </div>
+    );
+}
+
+function SubmitButton(props) {
+    return (
+        <div className="form-group text-center">
+            <input type="submit" className="btn btn-primary" value={props.children} />
+        </div>
     );
 }
 
@@ -55,20 +55,10 @@ class CommentForm extends React.Component {
     }
     render() {
         return (
-            <form className="CommentForm" onSubmit={this.handleFormSubmit}>
-                <div className="CommentForm-content">
-                    <div className="CommentForm-row">
-                        <TextField id="input-author" name="comment-author" value={this.state.author} onchange={this.handleTextChange}>Auteur</TextField>
-                    </div>
-                    <div className="CommentForm-row">
-                        <TextArea id="input-comment" name="comment-text" value={this.state.text} onchange={this.handleTextChange}>Commentaire</TextArea>
-                    </div>
-                    <div className="CommentForm-row">
-                        <div className="CommentForm-col-footer">
-                            <input type="submit" className="btn btn-primary" value="Valider" />
-                        </div>
-                    </div>
-                </div>
+            <form className="col-6" onSubmit={this.handleFormSubmit}>
+                <TextField id="input-author" name="comment-author" value={this.state.author} onchange={this.handleTextChange}>Auteur</TextField>
+                <TextArea id="input-comment" name="comment-text" value={this.state.text} onchange={this.handleTextChange}>Commentaire</TextArea>
+                <SubmitButton>Valider</SubmitButton>
             </form>
         );
     }
