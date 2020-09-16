@@ -1,5 +1,4 @@
 import React from 'react';
-//import './GameList.css';
 import {
     Link
   } from "react-router-dom";

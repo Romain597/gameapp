@@ -1,7 +1,6 @@
 import React from 'react';
-//import './App.css';
-import GameList from './GameList';
-import GameView from './GameView';
+import GameList from './Components/GameList';
+import GameView from './Components/GameView';
 import {
   BrowserRouter as Router,
   Switch,

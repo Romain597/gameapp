@@ -1,5 +1,5 @@
 import React from 'react';
-import './GameView.css';
+import './css/GameView.css';
 import CommentForm from './CommentForm';
 
 function GameInfo(props) {
@@ -51,9 +51,6 @@ class GameView extends React.Component {
         return title;
     }
     addComment(author,text) {
-        //let dateObj = new Date();
-        //let dateString = dateObj.getUTCFullYear() + "-" + dateObj.getUTCMonth() + "-" + dateObj.getUTCDay();
-        //let dateString = dateObj.toJSON();
         let num = parseInt(this.state.item.comments.length) + 1
         let newComment = { "num": num , "date": new Date() , "author": author , "text": text }
         let items = this.state.items
