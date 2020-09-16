@@ -1,13 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-//import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import Datas from './datas.json';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App items={Datas} />
+    <App />
   </React.StrictMode>,
   document.getElementById('root')
 );

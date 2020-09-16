@@ -1,39 +1,39 @@
 [
     {
-        "num": 1,
+        "id": 1,
         "title": "Assassin's Creed Valhalla",
         "releaseDate": "2020-11-10",
-        "from": "Ubisoft",
+        "studio": "Ubisoft",
         "category": "Aventure",
         "poster": "poster-ascv.png",
         "comments": [
-            { "num":1 , "date": "2020-09-08" , "author": "Romain" , "text": "Vivement la sortie !" },
-            { "num":2 , "date": "2020-09-02" , "author": "Romain" , "text": "Super impatient !!!" }
+            { "id":1 , "addDate": "2020-09-08" , "author": "Romain" , "text": "Vivement la sortie !" },
+            { "id":2 , "addDate": "2020-09-02" , "author": "Romain" , "text": "Super impatient !!!" }
         ]
     },
     {
-        "num": 2,
+        "id": 2,
         "title": "Total War : Three Kingdoms",
         "releaseDate": "2019-05-23",
-        "from": "Creative Assembly",
+        "studio": "Creative Assembly",
         "category": "Stratégie",
         "poster": "poster-tw3k.png",
         "comments": []
     },
     {
-        "num": 3,
+        "id": 3,
         "title": "Detroit : Become Human",
         "releaseDate": "2019-12-12",
-        "from": "Quantic Dream",
+        "studio": "Quantic Dream",
         "category": "Aventure",
         "poster": "poster-dbh.png",
         "comments": []
     },
     {
-        "num": 4,
+        "id": 4,
         "title": "Star Wars : Squadrons",
         "releaseDate": "2020-10-02",
-        "from": "Electronic Arts",
+        "studio": "Electronic Arts",
         "category": "Shooter",
         "poster": "poster-sws.png",
         "comments": []

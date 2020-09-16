@@ -1,6 +1,8 @@
-import React from 'react';
+import React , { useState , useContext } from 'react';
 import GameList from './Components/GameList';
 import GameView from './Components/GameView';
+import Datas from './datas.json';
+import GamesContext from './Components/GamesContext'
 import {
   BrowserRouter as Router,
   Switch,
@@ -8,63 +10,73 @@ import {
 } from "react-router-dom";
 
 function ButtonSort(props) {
+  const contextValue = useContext(GamesContext)
   return (
-    <div className={props.colClass}><button id={props.btnId} className={props.btnClass} onClick={props.sortingMethod}>{props.children}</button></div>
+    <div className={props.colClass}><button id={props.btnId} className={props.btnClass} onClick={contextValue.sortingMethod}>{props.children}</button></div>
   );
 }
 
-function ButtonSortList(props) {
+function ButtonSortList() {
   return (
     <header className="row justify-content-between align-items-stretch my-4">
-      <ButtonSort colClass="col" btnId="sort-alpha-asc" btnClass="btn btn-success h-100 w-100" sortingMethod={props.sortingMethod}>Trier par ordre alphabétique croissant</ButtonSort>
-      <ButtonSort colClass="col" btnId="sort-alpha-desc" btnClass="btn btn-primary h-100 w-100" sortingMethod={props.sortingMethod}>Trier par ordre alphabétique décroissant</ButtonSort>
-      <ButtonSort colClass="col" btnId="sort-date-asc" btnClass="btn btn-success h-100 w-100" sortingMethod={props.sortingMethod}>Trier par date de sortie croissante</ButtonSort>
-      <ButtonSort colClass="col" btnId="sort-date-desc" btnClass="btn btn-primary h-100 w-100" sortingMethod={props.sortingMethod}>Trier par date de sortie décroissante</ButtonSort>
-      <ButtonSort colClass="col" btnId="reset-sort" btnClass="btn btn-danger h-100 w-100" sortingMethod={props.sortingMethod}>Réinitialiser le tri</ButtonSort>
+      <ButtonSort colClass="col" btnId="sort-alpha-asc" btnClass="btn btn-success h-100 w-100" >Trier par ordre alphabétique croissant</ButtonSort>
+      <ButtonSort colClass="col" btnId="sort-alpha-desc" btnClass="btn btn-primary h-100 w-100" >Trier par ordre alphabétique décroissant</ButtonSort>
+      <ButtonSort colClass="col" btnId="sort-date-asc" btnClass="btn btn-success h-100 w-100" >Trier par date de sortie croissante</ButtonSort>
+      <ButtonSort colClass="col" btnId="sort-date-desc" btnClass="btn btn-primary h-100 w-100" >Trier par date de sortie décroissante</ButtonSort>
+      <ButtonSort colClass="col" btnId="reset-sort" btnClass="btn btn-danger h-100 w-100" >Réinitialiser le tri</ButtonSort>
     </header>
   );
 }
 
-function Home(props) {
+function Home() {
   return (
     <div className="App">
       <div className="container">
         <h2 className="text-center mt-3 mb-4 user-select-none">Liste de jeux</h2>
-        <ButtonSortList sortingMethod={props.sortingMethod} />
-        <GameList sortType={props.sortType} itemsSorted={props.items} />
+        <ButtonSortList />
+        <GameList />
       </div>
     </div>
   );
 }
 
 function Single(props) {
+
+  const contextValue = useContext(GamesContext)
+
+  const getGameObjectSelected = (id) => {
+    return (contextValue.games.filter( game => game.id === parseInt(id) ))[0]
+  }
+
   return (
     <div className="App">
       <div className="container">
-        <GameView itemNum={props.selectedItem} items={props.items} />
+        <GameView game={getGameObjectSelected(props.gameId)} />
       </div>
     </div>
   );
 }
 
-class App extends React.Component {
-  constructor(props) {
+const App = () => {
+  /*constructor(props) {
     super(props)
     if(!localStorage.getItem('items')) {
       localStorage.setItem("items",JSON.stringify(this.props.items));
     }
     let itemsStored = JSON.parse(localStorage.getItem('items'));
     this.state = { sortType: null , items: itemsStored }
-    this.loadDateObject = this.loadDateObject.bind(this)
-    this.handleSortClick = this.handleSortClick.bind(this)
-  }
-  loadDateObject() {
-    this.state.items.forEach( (item) => {
-      item.releaseDate = this.getDateObject(item.releaseDate)
-      item.comments.forEach( comment => comment.date = this.getDateObject(comment.date) );
+  }*/
+
+  const [ games , setGames ] = useState(Datas);
+
+  /*const loadDateObject = () => {
+    games.forEach( (game) => {
+      game.releaseDate = this.getDateObject(game.releaseDate)
+      game.comments.forEach( comment => comment.date = this.getDateObject(comment.date) );
     });
   }
-  getDateObject(dateString) {
+
+  const getDateObject = (dateString) => {
     let dateObj = dateString;
     if( typeof dateString == "string" ) {
       dateString = dateString.replace(/[Tt].+$/,'');
@@ -75,42 +87,44 @@ class App extends React.Component {
       dateObj = new Date(Date.UTC(year,month,day));
     }
     return dateObj;
-  }
-  handleSortClick(e) {
-    let itemsSorted = this.state.items;
-    let type;
+  }*/
+
+  const handleSortClick = (event) => {
+    let gamesSorted = games;
+    //let type;
     let method;
-    switch(e.target.id) {
+    switch(event.target.id) {
       case "sort-alpha-asc":
-        type = "alpha-asc";
-        method = this.sortByAlphaAsc();
+        //type = "alpha-asc";
+        method = sortByAlphaAsc;
       break;
       case "sort-alpha-desc":
-        type = "alpha-desc";
-        method = this.sortByAlphaDesc();
+        //type = "alpha-desc";
+        method = sortByAlphaDesc;
       break;
       case "sort-date-asc":
-        type = "date-asc";
-        method = this.sortByDateAsc();
+        //type = "date-asc";
+        method = sortByDateAsc;
       break;
       case "sort-date-desc":
-        type = "date-desc";
-        method = this.sortByDateDesc();
+        //type = "date-desc";
+        method = sortByDateDesc;
       break;
       case "reset-sort":
-        type = null;
-        method = this.resetSort();
+        //type = null;
+        method = resetSort;
       break;
       default:
-        type = this.state.sortType;
+        //type = this.state.sortType;
         method = null;
     }
     if( typeof method === 'function' ) {
-      itemsSorted.sort(method);
+      gamesSorted.sort(method);
     }
-    this.setState({ sortType: type , items: itemsSorted })
+    setGames(gamesSorted);
   }
-  sortByAlphaAsc() {
+
+  const sortByAlphaAsc = () => {
     return ((a,b)=>{
       if(a.title > b.title) {
           return 1;
@@ -119,7 +133,8 @@ class App extends React.Component {
       }
     });
   }
-  sortByAlphaDesc() {
+
+  const sortByAlphaDesc = () => {
     return ((a,b)=>{
       if(a.title < b.title) {
           return 1;
@@ -128,7 +143,8 @@ class App extends React.Component {
       }
     });
   }
-  sortByDateAsc() {
+
+  const sortByDateAsc = () => {
     return ((a,b)=>{
       if(a.releaseDate > b.releaseDate) {
           return 1;
@@ -137,7 +153,8 @@ class App extends React.Component {
       }
     });
   }
-  sortByDateDesc() {
+
+  const sortByDateDesc = () => {
     return ((a,b)=>{
       if(a.releaseDate < b.releaseDate) {
           return 1;
@@ -146,26 +163,33 @@ class App extends React.Component {
       }
     });
   }
-  resetSort() {
+
+  const resetSort = () => {
     return ((a,b)=>{
-      if(a.num > b.num) {
+      if(a.id > b.id) {
           return 1;
       } else {
           return -1;
       }
     });
   }
-  render() {
-    this.loadDateObject()
-    return (
+
+  const contextValue = {
+    games: games,
+    updateGames: setGames,
+    sortingMethod: handleSortClick
+  }
+
+  return (
+    <GamesContext.Provider value={ contextValue } >
       <Router>
           <Switch>
-            <Route exact path="/GameApp/gameapp/public" render={() => (<Home sortType={this.state.sortType} items={this.state.items} sortingMethod={this.handleSortClick} />)} />
-            <Route path="/GameApp/gameapp/public/view/:gameid" render={(props) => (<Single selectedItem={props.match.params.gameid} items={this.state.items} />)} />
+            <Route exact path="/GameApp/gameapp/public" render={ () => ( <Home /> ) } />
+            <Route path="/GameApp/gameapp/public/view/:gameid" render={ ( props ) => ( <Single gameId={ props.match.params.gameid } /> ) } />
           </Switch>
       </Router>
-    );
-  }
+    </GamesContext.Provider>
+  );
 }
 
 export default App;

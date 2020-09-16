@@ -1,4 +1,4 @@
-import React from 'react';
+import React , { useState } from 'react';
 
 function TextField(props) {
     return (
@@ -26,41 +26,39 @@ function SubmitButton(props) {
     );
 }
 
-class CommentForm extends React.Component {
-    constructor(props) {
-        super(props)
-        this.state = {
+const CommentForm = (props) => {
+
+    const [ formDatas , setFormDatas ] = useState({
             author: "",
             text: ""
-        };
-        this.handleTextChange = this.handleTextChange.bind(this)
-        this.handleFormSubmit = this.handleFormSubmit.bind(this)
-    }
-    handleTextChange(e) {
-        let name = e.target.name
+        });
+
+    const handleTextChange = (event) => {
+        let name = event.target.name
         name = name.replace("comment-","");
-        let value = e.target.value
-        this.setState({
+        let value = event.target.value
+        let data = {
             [name]: value
-        });
+        };
+        setFormDatas( { ...formDatas , ...data } )
     }
-    handleFormSubmit(e) {
-        e.preventDefault();
-        this.props.addComment(this.state.author.trim(),this.state.text.trim());
-        this.setState({
+
+    const handleFormSubmit = (event) => {
+        event.preventDefault();
+        props.addCommentMethod(formDatas.author.trim(),formDatas.text.trim())
+        setFormDatas({
             author: "",
             text: ""
         });
     }
-    render() {
-        return (
-            <form className="col-6" onSubmit={this.handleFormSubmit}>
-                <TextField id="input-author" name="comment-author" value={this.state.author} onchange={this.handleTextChange}>Auteur</TextField>
-                <TextArea id="input-comment" name="comment-text" value={this.state.text} onchange={this.handleTextChange}>Commentaire</TextArea>
-                <SubmitButton>Valider</SubmitButton>
-            </form>
-        );
-    }
+
+    return (
+        <form className="col-6" onSubmit={handleFormSubmit}>
+            <TextField id="input-author" name="comment-author" value={formDatas.author} onchange={handleTextChange} >Auteur</TextField>
+            <TextArea id="input-comment" name="comment-text" value={formDatas.text} onchange={handleTextChange} >Commentaire</TextArea>
+            <SubmitButton>Valider</SubmitButton>
+        </form>
+    );
 }
 
 export default CommentForm;
