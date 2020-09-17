@@ -1,8 +1,10 @@
-import React , { useState , useContext } from 'react';
+import React , { useState , useContext , useEffect } from 'react';
 import GameList from './Components/GameList';
 import GameView from './Components/GameView';
-import Datas from './datas.json';
+//import Datas from './datas.json';
 import GamesContext from './Components/GamesContext'
+import Api from './Api'
+import axios from 'axios'
 import {
   BrowserRouter as Router,
   Switch,
@@ -67,7 +69,12 @@ const App = () => {
     this.state = { sortType: null , items: itemsStored }
   }*/
 
-  const [ games , setGames ] = useState(Datas);
+  //const [ games , setGames ] = useState(Datas);
+  const [ games , setGames ] = useState([]);
+  /*const datas = Api.getGames();
+  console.log(datas);
+  const [ games , setGames ] = useState(datas);
+  console.log(games);*/
 
   /*const loadDateObject = () => {
     games.forEach( (game) => {
@@ -173,6 +180,36 @@ const App = () => {
       }
     });
   }
+
+  /*const setDatas = () => axios({
+    url: "/games",
+    method: "get",
+    baseURL: "https://localhost:8000"
+  }).then((response)=>{
+    console.log(response);
+    console.log(response.data);
+    console.log(response.status);
+    console.log(response.statusText);
+    console.log(response.headers);
+    console.log(response.config);
+    setGames(response.data);
+    console.log(games);
+  }).catch(error => console.log(error));*/
+
+  useEffect( () => {
+    /*axios.get("https://localhost:8000/games").then((response) => {
+      console.log(response);
+      console.log(response.data);
+      console.log(response.status);
+      console.log(response.statusText);
+      console.log(response.headers);
+      console.log(response.config);
+      setGames(response.data);
+      console.log(games);
+    });*/
+    //setDatas();
+    Api.setGamesWithApi(setGames);
+  }, [games] );
 
   const contextValue = {
     games: games,
