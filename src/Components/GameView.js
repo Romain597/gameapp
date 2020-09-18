@@ -4,21 +4,62 @@ import './css/GameView.css';
 import CommentForm from './CommentForm';
 
 function GameInfo(props) {
+    let poster = props.gameObject.posterFile
+    if( poster === null || poster.trim() === "" ) {
+        poster = 'poster-no-image.png';
+    }
+    let dateString = "Non renseignée"
+    if( props.gameObject.releasedAt !== null || props.gameObject.releasedAt.date !== "" ) {
+        dateString = (props.getDateObjectMethod(props.gameObject.releasedAt.date)).toLocaleDateString('fr-FR', props.dateOptions)
+    }
+    let separator = ' | '
+    let studios = props.gameObject.studios
+    let studiosNames = "Non renseigné"
+    if( studios.length > 0 ) {
+        studios.foreach( ( key, studio ) => {
+            if(studio.name.trim() !== '' ) {
+                separator = ' | '
+                if( key === 0 ) {
+                    separator = ''
+                }
+                studiosNames += separator + studio.name
+            }
+        });
+    }
+    let categories = props.gameObject.categories
+    let categoriesNames = "Non renseignée"
+    if( categories.length > 0 ) {
+        categories.foreach( ( key, category ) => {
+            if(category.name.trim() !== '' ) {
+                separator = ' | '
+                if( key === 0 ) {
+                    separator = ''
+                }
+                categoriesNames += separator + category.name
+            }
+        });
+    }
     return (
         <React.Fragment>
-        <h4 className="col-12 text-center my-2 text-primary user-select-none">{props.gameObject.title}</h4>
-        <img className="col-6 text-center img-fluid my-2" src={"/" + props.gameObject.poster} alt={"Affiche de " + props.gameObject.title} />
-        <p className="col-12 text-center my-2 user-select-none">Date de sortie : <span className="text-primary">{(props.getDateObjectMethod(props.gameObject.releaseDate)).toLocaleDateString('fr-FR', props.dateOptions)}</span></p>
-        <p className="col-12 text-center my-2 user-select-none">Catégorie : <span className="text-primary">{props.gameObject.category}</span></p>
-        <p className="col-12 text-center my-2 user-select-none">Studio : <span className="text-primary">{props.gameObject.studio}</span></p>
+        <h4 className="col-12 text-center my-2 text-primary user-select-none">{props.gameObject.name}</h4>
+        <img className="col-6 text-center img-fluid my-2 p-0 border" src={"/" + poster} alt={"Affiche de " + props.gameObject.name} />
+        <p className="col-12 text-center my-2 user-select-none">Date de sortie : <span className="text-primary">{dateString}</span></p>
+        <p className="col-12 text-center my-2 user-select-none">Catégorie : <span className="text-primary">{categoriesNames}</span></p>
+        <p className="col-12 text-center my-2 user-select-none">Studio : <span className="text-primary">{studiosNames}</span></p>
+        <p className="col-12 text-center my-2 user-select-none">Description : <span className="text-primary">{props.gameObject.description}</span></p>
         </React.Fragment>
     );
 }
 
 function Comment(props) {
+    let displayTime = true
+    let dateString = '-'
+    if( props.gameObject.publishedAt !== null || props.gameObject.publishedAt.date !== "" ) {
+        dateString = (props.getDateObjectMethod(props.commentObject.publishedAt.date,displayTime)).toLocaleDateTimeString(props.commentDateOptions)
+    }
     return (
         <div id={"comment-" + props.commentObject.id} key={props.commentObject.id} className="col-12 game-view-comment">
-            <p className="user-select-none font-weight-light">De <span className="text-primary font-weight-normal">{props.commentObject.author}</span> le <span className="text-secondary font-weight-normal">{(props.getDateObjectMethod(props.commentObject.addDate)).toLocaleDateString(props.dateOptions)}</span></p>
+            <p className="user-select-none font-weight-light">De <span className="text-primary font-weight-normal">{props.commentObject.author}</span> le <span className="text-secondary font-weight-normal">{dateString}</span></p>
             <p className="user-select-none">{props.commentObject.text}</p>
         </div>
     );
@@ -36,21 +77,31 @@ const GameView = (props) => {
 
     const dateOptions = { timeZone: 'UTC', year: 'numeric', month: '2-digit', day: '2-digit' }
 
-    const getDateObject = (dateString) => {
+    const getDateObject = (dateString , time = false ) => {
         let dateObj = dateString;
         if( typeof dateString == "string" ) {
-          dateString = dateString.replace(/[Tt].+$/,'');
-          let dateArray = dateString.split('-');
-          let year = parseInt(dateArray[0] , 10);
-          let month = parseInt(dateArray[1] , 10) - 1;
-          let day = parseInt(dateArray[2] , 10);
-          dateObj = new Date(Date.UTC(year,month,day));
+            if( time === false ) {
+                dateString = dateString.replace(/[Tt].+$/,'');
+                dateString = dateString.trim() + '-0-0-0'
+            } else {
+                dateString = dateString.replace(/[^\s\d:]/,'');
+                dateString = dateString.trim().replace(/[:\s]/,'-');
+            }
+            let dateArray = dateString.split('-');
+            let year = parseInt(dateArray[0] , 10);
+            let month = parseInt(dateArray[1] , 10) - 1;
+            let day = parseInt(dateArray[2] , 10);
+            let hour = parseInt(dateArray[3] , 10);
+            let minute = parseInt(dateArray[4] , 10);
+            let second = parseInt(dateArray[5] , 10);
+            dateObj = new Date(Date.UTC(year,month,day,hour,minute,second));
         }
         return dateObj;
     }
 
     const getComments = () => {
         let resultComments;
+        let commentDateOptions = { ...dateOptions , hour: '2-digit', minute: '2-digit', second: '2-digit' }
         if( comments.length > 0 ) {
             comments.sort((a,b) => {
                 if(a.date < b.date) {
@@ -60,7 +111,7 @@ const GameView = (props) => {
                 }
             });
             resultComments = comments.map( comment =>
-                <Comment commentObject={comment} getDateObjectMethod={getDateObject} dateOptions={dateOptions} />
+                <Comment commentObject={comment} getDateObjectMethod={getDateObject} commentDateOptions={commentDateOptions} />
             );
         }
         return resultComments;

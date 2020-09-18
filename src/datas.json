@@ -4,7 +4,7 @@
         "title": "Assassin's Creed Valhalla",
         "releaseDate": "2020-11-10",
         "studio": "Ubisoft",
-        "category": "Aventure",
+        "category": "Action,Aventure",
         "poster": "poster-ascv.png",
         "comments": [
             { "id":1 , "addDate": "2020-09-08" , "author": "Romain" , "text": "Vivement la sortie !" },
@@ -33,9 +33,18 @@
         "id": 4,
         "title": "Star Wars : Squadrons",
         "releaseDate": "2020-10-02",
-        "studio": "Electronic Arts",
+        "studio": "Motive Studios,Electronic Arts",
         "category": "Shooter",
         "poster": "poster-sws.png",
+        "comments": []
+    },
+    {
+        "id": 5,
+        "title": "Watch Dogs Legion",
+        "releaseDate": "2020-10-29",
+        "studio": "Ubisoft",
+        "category": "Action,Aventure",
+        "poster": "poster-wdl.png",
         "comments": []
     }
 ]

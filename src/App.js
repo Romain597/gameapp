@@ -4,7 +4,7 @@ import GameView from './Components/GameView';
 //import Datas from './datas.json';
 import GamesContext from './Components/GamesContext'
 import Api from './Api'
-import axios from 'axios'
+//import axios from 'axios'
 import {
   BrowserRouter as Router,
   Switch,
@@ -34,7 +34,7 @@ function Home() {
   return (
     <div className="App">
       <div className="container">
-        <h2 className="text-center mt-3 mb-4 user-select-none">Liste de jeux</h2>
+        <h2 className="text-center mt-3 mb-4 user-select-none">Liste de jeux PC</h2>
         <ButtonSortList />
         <GameList />
       </div>
@@ -78,7 +78,7 @@ const App = () => {
 
   /*const loadDateObject = () => {
     games.forEach( (game) => {
-      game.releaseDate = this.getDateObject(game.releaseDate)
+      game.releasedAt = this.getDateObject(game.releasedAt)
       game.comments.forEach( comment => comment.date = this.getDateObject(comment.date) );
     });
   }
@@ -133,7 +133,7 @@ const App = () => {
 
   const sortByAlphaAsc = () => {
     return ((a,b)=>{
-      if(a.title > b.title) {
+      if(a.name > b.name) {
           return 1;
       } else {
           return -1;
@@ -143,7 +143,7 @@ const App = () => {
 
   const sortByAlphaDesc = () => {
     return ((a,b)=>{
-      if(a.title < b.title) {
+      if(a.name < b.name) {
           return 1;
       } else {
           return -1;
@@ -153,7 +153,7 @@ const App = () => {
 
   const sortByDateAsc = () => {
     return ((a,b)=>{
-      if(a.releaseDate > b.releaseDate) {
+      if(a.releasedAt > b.releasedAt) {
           return 1;
       } else {
           return -1;
@@ -163,7 +163,7 @@ const App = () => {
 
   const sortByDateDesc = () => {
     return ((a,b)=>{
-      if(a.releaseDate < b.releaseDate) {
+      if(a.releasedAt < b.releasedAt) {
           return 1;
       } else {
           return -1;
@@ -208,7 +208,7 @@ const App = () => {
       console.log(games);
     });*/
     //setDatas();
-    Api.setGamesWithApi(setGames);
+    Api.getGamesWithApi(setGames);
   }, [games] );
 
   const contextValue = {

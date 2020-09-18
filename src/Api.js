@@ -5,7 +5,7 @@ class Api {
     this.#axios = require('axios');
     this.#axios.defaults.baseURL = "https://localhost:8000";
   }
-  setGamesWithApi( updateGamesMethod ) {
+  getGamesWithApi( updateGamesMethod ) {
     return this.#axios({
         url: "/games",
         method: "get"

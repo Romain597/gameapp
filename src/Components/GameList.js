@@ -5,12 +5,34 @@ import {
   } from "react-router-dom";
 
 function GameListInfo(props) {
+    let poster = props.gameObject.posterFile
+    if( poster === null || poster.trim() === "" ) {
+        poster = 'poster-no-image.png';
+    }
+    let dateString = '-'
+    if( props.gameObject.releasedAt !== null || props.gameObject.releasedAt.date !== "" ) {
+        dateString = (props.getDateObjectMethod(props.gameObject.releasedAt.date)).toLocaleDateString('fr-FR', props.dateOptions)
+    }
+    let studios = props.gameObject.studios
+    let studiosNames = '-' //"Non renseigné"
+    let separator = ' | '
+    if( studios.length > 0 ) {
+        studios.foreach( ( key, studio ) => {
+            if(studio.name.trim() !== '' ) {
+                separator = ' | '
+                if( key === 0 ) {
+                    separator = ''
+                }
+                studiosNames += separator + studio.name
+            }
+        });
+    }
     return (
         <React.Fragment>
-        <h6 className="text-center font-weight-bold my-2">{props.gameObject.title}</h6>
-        <img className="text-center w-100 mt-1 img-fluid" src={"/" + props.gameObject.poster} alt={"Affiche de " + props.gameObject.title} />
-        <p className="text-center my-2">{"Date de sortie : " + (props.getDateObjectMethod(props.gameObject.releaseDate)).toLocaleDateString('fr-FR', props.dateOptions)}</p>
-        <p className="text-center my-2">{"Studio : " + props.gameObject.studio}</p>
+        <h6 className="text-center font-weight-bold my-2">{props.gameObject.name}</h6>
+        <img className="text-center w-100 mt-1 img-fluid" src={"/" + poster} alt={"Affiche de " + props.gameObject.name} />
+        <p className="text-center my-2">Date de sortie : {dateString}</p>
+        <p className="text-center my-2">Studio : {studiosNames}</p>
         </React.Fragment>
     );
 }
@@ -30,15 +52,24 @@ const GameList = () => {
 
     const dateOptions = { timeZone: 'UTC', year: 'numeric', month: '2-digit', day: '2-digit' };
 
-    const getGameDateObject = (dateString) => {
+    const getGameDateObject =  (dateString , time = false ) => {
         let dateObj = dateString;
         if( typeof dateString == "string" ) {
-          dateString = dateString.replace(/[Tt].+$/,'');
-          let dateArray = dateString.split('-');
-          let year = parseInt(dateArray[0] , 10);
-          let month = parseInt(dateArray[1] , 10) - 1;
-          let day = parseInt(dateArray[2] , 10);
-          dateObj = new Date(Date.UTC(year,month,day));
+            if( time === false ) {
+                dateString = dateString.replace(/[Tt].+$/,'');
+                dateString = dateString.trim() + '-0-0-0'
+            } else {
+                dateString = dateString.replace(/[^\s\d:]/,'');
+                dateString = dateString.trim().replace(/[:\s]/,'-');
+            }
+            let dateArray = dateString.split('-');
+            let year = parseInt(dateArray[0] , 10);
+            let month = parseInt(dateArray[1] , 10) - 1;
+            let day = parseInt(dateArray[2] , 10);
+            let hour = parseInt(dateArray[3] , 10);
+            let minute = parseInt(dateArray[4] , 10);
+            let second = parseInt(dateArray[5] , 10);
+            dateObj = new Date(Date.UTC(year,month,day,hour,minute,second));
         }
         return dateObj;
     }
