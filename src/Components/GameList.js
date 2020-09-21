@@ -1,5 +1,6 @@
-import React , { useContext } from 'react';
-import GamesContext from './GamesContext'
+import React , { useState , useContext , useEffect } from 'react';
+//import GamesContext from './GamesContext'
+import Api from '../Api'
 import {
     Link
   } from "react-router-dom";
@@ -7,7 +8,7 @@ import {
 function GameListInfo(props) {
     let poster = props.gameObject.posterFile
     if( poster === null || poster.trim() === "" ) {
-        poster = 'poster-no-image.png';
+        poster = 'no-poster.svg';
     }
     let dateString = '-'
     if( props.gameObject.releasedAt !== null || props.gameObject.releasedAt.date !== "" ) {
@@ -48,7 +49,13 @@ const GameList = () => {
         this.getItemList = this.getItemList.bind(this)
     }*/
 
-    const contextValue = useContext(GamesContext)
+    //const contextValue = useContext(GamesContext)
+
+    const [ games , setGames ] = useState([]);
+
+    useEffect( () => {
+        Api.getApiGames(setGames);
+    }, [games] );
 
     const dateOptions = { timeZone: 'UTC', year: 'numeric', month: '2-digit', day: '2-digit' };
 
@@ -74,8 +81,8 @@ const GameList = () => {
         return dateObj;
     }
 
-    const getGameList = () => {
-        return contextValue.games.map( game =>
+    const getGameList = () => { //contextValue.
+        return games.map( game =>
             <Link to={"/GameApp/gameapp/public/view/" + game.id} key={game.id} className="col-5 m-1 align-self-stretch px-4 py-1 border list-group-item list-group-item-action" id={"game-" + game.id}>
                 <GameListInfo gameObject={game} getDateObjectMethod={getGameDateObject} dateOptions={dateOptions} />
             </Link>

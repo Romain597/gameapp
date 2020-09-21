@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="520" height="708" viewBox="0 0 520 708">
+	<g color="#8d8b8b">
+		<rect pointer-events="none" cursor="default" x="138px" y="201px" width="244px" height="166px" rx="6px" ry="6px" stroke-width="10px" stroke="currentcolor" fill="transparent" />
+		<circle pointer-events="none" cursor="default" cx="175px" cy="240px" r="19px" fill="currentcolor" />
+		<path pointer-events="none" cursor="default" fill="currentcolor" d="M 151,354 L 195,295 Q 205.5,282 216,295 L 231,316 L 275,256 Q 285.5,243 296,256 L 370,354 Z"/>
+		<text pointer-events="none" cursor="default" text-anchor="middle" style="font-size: 32px;font-weight: bold;" fill="currentcolor" y="540px" x="50%">Image non disponible</text>
+	</g>
+</svg>

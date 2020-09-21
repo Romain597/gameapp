@@ -1,52 +1,63 @@
-import React , { useState , useContext } from 'react';
+import React , {  useState , useContext , useEffect } from 'react';
 import GamesContext from './GamesContext'
 import './css/GameView.css';
+import Api from '../Api'
 import CommentForm from './CommentForm';
 
 function GameInfo(props) {
-    let poster = props.gameObject.posterFile
-    if( poster === null || poster.trim() === "" ) {
-        poster = 'poster-no-image.png';
-    }
+    let poster = "no-poster.svg";
     let dateString = "Non renseignée"
-    if( props.gameObject.releasedAt !== null || props.gameObject.releasedAt.date !== "" ) {
-        dateString = (props.getDateObjectMethod(props.gameObject.releasedAt.date)).toLocaleDateString('fr-FR', props.dateOptions)
-    }
-    let separator = ' | '
-    let studios = props.gameObject.studios
     let studiosNames = "Non renseigné"
-    if( studios.length > 0 ) {
-        studios.foreach( ( key, studio ) => {
-            if(studio.name.trim() !== '' ) {
-                separator = ' | '
-                if( key === 0 ) {
-                    separator = ''
-                }
-                studiosNames += separator + studio.name
-            }
-        });
-    }
-    let categories = props.gameObject.categories
     let categoriesNames = "Non renseignée"
-    if( categories.length > 0 ) {
-        categories.foreach( ( key, category ) => {
-            if(category.name.trim() !== '' ) {
-                separator = ' | '
-                if( key === 0 ) {
-                    separator = ''
+    let name = "Inconnu"
+    let description = "Empty"
+    if( typeof props.gameObject === "array" ) {
+        name = props.gameObject.name
+        description = props.gameObject.description
+        poster = props.gameObject.posterFile
+        if( poster === null || poster.trim() === "" ) {
+            poster = 'no-poster.svg';
+        }
+        //let dateString = "Non renseignée"
+        if( props.gameObject.releasedAt !== null || props.gameObject.releasedAt.date !== "" ) {
+            dateString = (props.getDateObjectMethod(props.gameObject.releasedAt.date)).toLocaleDateString('fr-FR', props.dateOptions)
+        }
+        let separator = ' | '
+        let studios = props.gameObject.studios
+        //let studiosNames = "Non renseigné"
+        if( studios.length > 0 ) {
+            studios.foreach( ( key, studio ) => {
+                if(studio.name.trim() !== '' ) {
+                    separator = ' | '
+                    if( key === 0 ) {
+                        separator = ''
+                    }
+                    studiosNames += separator + studio.name
                 }
-                categoriesNames += separator + category.name
-            }
-        });
+            });
+        }
+        let categories = props.gameObject.categories
+        //let categoriesNames = "Non renseignée"
+        if( categories.length > 0 ) {
+            categories.foreach( ( key, category ) => {
+                if(category.name.trim() !== '' ) {
+                    separator = ' | '
+                    if( key === 0 ) {
+                        separator = ''
+                    }
+                    categoriesNames += separator + category.name
+                }
+            });
+        }
     }
     return (
         <React.Fragment>
-        <h4 className="col-12 text-center my-2 text-primary user-select-none">{props.gameObject.name}</h4>
-        <img className="col-6 text-center img-fluid my-2 p-0 border" src={"/" + poster} alt={"Affiche de " + props.gameObject.name} />
+        <h4 className="col-12 text-center my-2 text-primary user-select-none">{name}</h4>
+        <img className="col-6 text-center img-fluid my-2 p-0 border" src={"/" + poster} alt={"Affiche de " + name} />
         <p className="col-12 text-center my-2 user-select-none">Date de sortie : <span className="text-primary">{dateString}</span></p>
         <p className="col-12 text-center my-2 user-select-none">Catégorie : <span className="text-primary">{categoriesNames}</span></p>
         <p className="col-12 text-center my-2 user-select-none">Studio : <span className="text-primary">{studiosNames}</span></p>
-        <p className="col-12 text-center my-2 user-select-none">Description : <span className="text-primary">{props.gameObject.description}</span></p>
+        <p className="col-12 text-center my-2 user-select-none">Description : <span className="text-primary">{description}</span></p>
         </React.Fragment>
     );
 }
@@ -71,9 +82,14 @@ const GameView = (props) => {
         this.state = { items: this.props.items, item: (props.items.filter( item => item.num === parseInt(props.itemNum) ))[0] };
     }*/
 
-    const [ comments , setComments ] = useState(props.game.comments)
-
-    const contextValue = useContext(GamesContext) //[ games , updateGames , sortingMethod ]
+    //const [ comments , setComments ] = useState(props.game.comments)
+    const [ game , setGame ] = useState([])
+    
+    useEffect( () => {
+        Api.getApiGameWithId(props.gameId, setGame);
+    }, [game] );
+    
+    //const contextValue = useContext(GamesContext) //[ games , updateGames , sortingMethod ]
 
     const dateOptions = { timeZone: 'UTC', year: 'numeric', month: '2-digit', day: '2-digit' }
 
@@ -102,15 +118,15 @@ const GameView = (props) => {
     const getComments = () => {
         let resultComments;
         let commentDateOptions = { ...dateOptions , hour: '2-digit', minute: '2-digit', second: '2-digit' }
-        if( comments.length > 0 ) {
-            comments.sort((a,b) => {
+        if( typeof game.comments === 'array' && game.comments.length > 0 ) {
+            game.comments.sort((a,b) => {
                 if(a.date < b.date) {
                     return 1;
                 } else {
                     return -1;
                 }
             });
-            resultComments = comments.map( comment =>
+            resultComments = game.comments.map( comment =>
                 <Comment commentObject={comment} getDateObjectMethod={getDateObject} commentDateOptions={commentDateOptions} />
             );
         }
@@ -119,20 +135,20 @@ const GameView = (props) => {
 
     const getCommentsTitle = () => {
         let title = 'Aucun commentaire';
-        if( comments.length > 1 ) {
+        if( typeof game.comments === 'array' && game.comments.length > 1 ) {
             title = 'Commentaires';
-        } else if( comments.length > 0 ) {
+        } else if( typeof game.comments === 'array' && game.comments.length > 0 ) {
             title = 'Commentaire';
         }
         return title;
     }
 
     const addComment = (author,text) => {
-        let num = parseInt(comments.length) + 1
+        /*let num = parseInt(game.comments.length) + 1
         let currentDate = new Date()
         let dateString = currentDate.getUTCFullYear() + "-" + currentDate.getUTCMonth() + "-" + currentDate.getUTCDay();
         let newComment = { "id": num , "addDate": dateString , "author": author , "text": text }
-        let commentsUpdated = comments;
+        let commentsUpdated = game.comments;
         commentsUpdated.push(newComment)
         setComments(commentsUpdated)
         let gamesUpdated = contextValue.games
@@ -141,7 +157,7 @@ const GameView = (props) => {
                 gameObject.comments = commentsUpdated
             }
         })
-        contextValue.updateGames(gamesUpdated)
+        contextValue.updateGames(gamesUpdated)*/
         /*let num = parseInt(this.state.item.comments.length) + 1
         let newComment = { "num": num , "date": new Date() , "author": author , "text": text }
         let items = this.state.items
@@ -157,7 +173,7 @@ const GameView = (props) => {
             <div className="col">
                 <h4 className="text-center user-select-none">Détails du jeux</h4>
                 <div className="row mb-3 justify-content-center">
-                    <GameInfo gameObject={props.game} getDateObjectMethod={getDateObject} dateOptions={dateOptions} />
+                    <GameInfo gameObject={game} getDateObjectMethod={getDateObject} dateOptions={dateOptions} />
                 </div>
                 <div className="row mb-3">
                     <div className="col">

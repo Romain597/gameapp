@@ -3,7 +3,7 @@ import GameList from './Components/GameList';
 import GameView from './Components/GameView';
 //import Datas from './datas.json';
 import GamesContext from './Components/GamesContext'
-import Api from './Api'
+//import Api from './Api'
 //import axios from 'axios'
 import {
   BrowserRouter as Router,
@@ -44,16 +44,16 @@ function Home() {
 
 function Single(props) {
 
-  const contextValue = useContext(GamesContext)
+  /*const contextValue = useContext(GamesContext)
 
   const getGameObjectSelected = (id) => {
     return (contextValue.games.filter( game => game.id === parseInt(id) ))[0]
-  }
-
+  }*/
+//game={getGameObjectSelected(props.gameId)}
   return (
     <div className="App">
       <div className="container">
-        <GameView game={getGameObjectSelected(props.gameId)} />
+        <GameView gameId={props.gameId} />
       </div>
     </div>
   );
@@ -70,7 +70,7 @@ const App = () => {
   }*/
 
   //const [ games , setGames ] = useState(Datas);
-  const [ games , setGames ] = useState([]);
+  //const [ games , setGames ] = useState([]);
   /*const datas = Api.getGames();
   console.log(datas);
   const [ games , setGames ] = useState(datas);
@@ -97,7 +97,8 @@ const App = () => {
   }*/
 
   const handleSortClick = (event) => {
-    let gamesSorted = games;
+    //let gamesSorted = games;
+    let gamesSorted = [];
     //let type;
     let method;
     switch(event.target.id) {
@@ -128,7 +129,7 @@ const App = () => {
     if( typeof method === 'function' ) {
       gamesSorted.sort(method);
     }
-    setGames(gamesSorted);
+    //setGames(gamesSorted);
   }
 
   const sortByAlphaAsc = () => {
@@ -181,39 +182,17 @@ const App = () => {
     });
   }
 
-  /*const setDatas = () => axios({
-    url: "/games",
-    method: "get",
-    baseURL: "https://localhost:8000"
-  }).then((response)=>{
-    console.log(response);
-    console.log(response.data);
-    console.log(response.status);
-    console.log(response.statusText);
-    console.log(response.headers);
-    console.log(response.config);
-    setGames(response.data);
-    console.log(games);
-  }).catch(error => console.log(error));*/
-
-  useEffect( () => {
-    /*axios.get("https://localhost:8000/games").then((response) => {
-      console.log(response);
-      console.log(response.data);
-      console.log(response.status);
-      console.log(response.statusText);
-      console.log(response.headers);
-      console.log(response.config);
-      setGames(response.data);
-      console.log(games);
-    });*/
-    //setDatas();
-    Api.getGamesWithApi(setGames);
+    /*useEffect( () => {
+    Api.getApiGames(setGames);
   }, [games] );
 
-  const contextValue = {
+const contextValue = {
     games: games,
     updateGames: setGames,
+    sortingMethod: handleSortClick
+  }*/
+
+  const contextValue = {
     sortingMethod: handleSortClick
   }
 
