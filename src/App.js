@@ -163,14 +163,15 @@ function Single(props) {
   }*/
 //game={getGameObjectSelected(props.gameId)}
 
-const fetchGame = useCallback((setGameMethod) => {
+/*const fetchGame = useCallback((setGameMethod) => {
   Api.getApiGameWithId(props.gameId,setGameMethod);
-}, [props.gameId]);
+}, [props.gameId]);*/
 
+//fetchGame={fetchGame}
   return (
     <div className="App">
       <div className="container">
-        <GameView game={fetchGame} />
+        <GameView gameId={props.gameId} />
       </div>
     </div>
   );

@@ -94,15 +94,35 @@ const GameView = (props) => {
     //const [ comments , setComments ] = useState(props.game.comments)
     
     //const [ game , setGame ] = useState(contextValue.games[0])
-    const [ game , setGame ] = useState({});
+    const empty = {
+        "id": 0,
+        "name": "",
+        "posterFile": "",
+        "description": "",
+        "releasedAt": "",
+        "comments": [ ],
+        "studios": [
+            {
+                "id": 0,
+                "name": ""
+            }
+        ],
+        "categories": [
+            {
+                "id": 0,
+                "name": ""
+            }
+        ]
+    }
+    const [ game , setGame ] = useState(empty);
     
-    //Api.getApiGameWithId(props.gameId,setGame);
+    Api.getApiGameWithId(props.gameId,setGame);
     //Api.getGame(props.gameId,setGame);
-    /*axios.get('https://localhost:8000/game/1')
+    /*axios.get('https://localhost:8000/game/'+props.gameId)
       .then(response => {
-        //const datas = response.data;
-        console.log(response);
-        //setGame( datas );
+        //console.log(response);
+        setGame( response.data );
+        console.log(game);
       });*/
 
       /*async function fetchData() {
@@ -119,20 +139,29 @@ const GameView = (props) => {
       }
       fetchData();*/
 
-    useEffect(() => {
+      /*let ignore = false;    
+      async function fetchData() {
+        const response = await fetch('https://localhost:8000/game/'+props.gameId);
+        const json = await response.json();
+        if (!ignore) setGame(json);    
+      }
+      fetchData();
+      //return () => { ignore = true };*/
+
+    /*useEffect(() => {
         props.fetchGame(setGame);
-    }, [props.fetchGame]);
+    }, [props.fetchGame]);*/
 
     /*useEffect( () => {
-        //Api.getApiGameWithId(props.gameId,setGame);
-        Api.getGame(props.gameId,setGame);
+        Api.getApiGameWithId(props.gameId,setGame);
+        //Api.getGame(props.gameId,setGame);
         axios.get('https://localhost:8000/game/1')
       .then(response => {
         const datas = response.data;
         console.log(response);
         setGame( datas );
-      });*/
-      /*let ignoreb = false;    
+      });
+      let ignoreb = false;    
       async function fetchDatab() {
         const responseb = await fetch('https://localhost:8000/game/'+props.gameId);
         const jsonb = await responseb.json();
@@ -140,7 +169,7 @@ const GameView = (props) => {
       }
       fetchDatab();
       return () => { ignoreb = true };
-    }, [game] );*/
+    }, [] );*/
 
     //console.log(game);
 

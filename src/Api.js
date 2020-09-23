@@ -33,7 +33,7 @@ class Api {
     return this.#axios.get("/game/" + gameId)
       .then(function (response) {
         // handle success
-        //console.log(response);
+        console.log(response);
         updateGameMethod(response.data);
       })
       .catch(function (error) {
@@ -45,10 +45,12 @@ class Api {
       });
   }
   async getGame( gameId , updateGameMethod ) {
+    console.log("getGame");
     try {
       const response = await this.#axios.get("/game/" + gameId);
       //console.log(response);
       updateGameMethod(response.data);
+      console.log(response.data);
     } catch (error) {
       console.error(error);
     }

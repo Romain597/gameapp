@@ -97,7 +97,7 @@ const GameList = () => {
     }
 
     const getGameList = () => {
-        console.log(contextValue.games)
+        //console.log(contextValue.games)
         return contextValue.games.map( (game) => (
             <Link to={"/GameApp/gameapp/public/view/" + game.id} key={game.id} className="col-5 m-1 align-self-stretch px-4 py-1 border list-group-item list-group-item-action" id={"game-" + game.id}>
                 <GameListInfo gameObject={game} getDateObjectMethod={getGameDateObject} dateOptions={dateOptions} />
