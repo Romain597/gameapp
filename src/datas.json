@@ -1,50 +1,129 @@
 [
+
     {
         "id": 1,
-        "title": "Assassin's Creed Valhalla",
-        "releaseDate": "2020-11-10",
-        "studio": "Ubisoft",
-        "category": "Action,Aventure",
-        "poster": "poster-ascv.png",
+        "name": "Assassin's Creed Valhalla",
+        "posterFile": "poster-ascv.png",
+        "description": "Assassin's Creed Valhalla est un RPG en monde ouvert se déroulant pendant l'âge des vikings. Vous incarnez Eivor, un viking du sexe de votre choix qui a quitté la Norvège pour trouver la fortune et la gloire en Angleterre. Raids, construction et croissance de votre colonie, mais aussi personnalisation du héros ou de l'héroïne sont au programme de cet épisode.",
+        "releasedAt": "2020-11-10T00:00:00+00:00",
         "comments": [
-            { "id":1 , "addDate": "2020-09-08" , "author": "Romain" , "text": "Vivement la sortie !" },
-            { "id":2 , "addDate": "2020-09-02" , "author": "Romain" , "text": "Super impatient !!!" }
+            {
+                "id": 1,
+                "author": "Romain",
+                "publishedAt": "2020-09-08T18:00:00+00:00",
+                "text": "Super impatient !!!"
+            },
+            {
+                "id": 2,
+                "author": "Romain",
+                "publishedAt": "2020-09-06T11:00:00+00:00",
+                "text": "Vivement la sortie !"
+            }
+        ],
+        "studios": [
+            {
+                "id": 3,
+                "name": "Ubisoft"
+            }
+        ],
+        "categories": [
+            {
+                "id": 1,
+                "name": "Action"
+            },
+            {
+                "id": 2,
+                "name": "Aventure"
+            }
         ]
     },
     {
         "id": 2,
-        "title": "Total War : Three Kingdoms",
-        "releaseDate": "2019-05-23",
-        "studio": "Creative Assembly",
-        "category": "Stratégie",
-        "poster": "poster-tw3k.png",
-        "comments": []
+        "name": "Total War : Three Kingdoms",
+        "posterFile": "poster-tw3k.png",
+        "description": "Total War : Three Kingdoms est la prochaine itération dans la licence du célèbre jeu de stratégie. Nous partons du côté de la Chine dans les environs des IIème et IIIème siècles après Jésus-Christ. Inspiré du roman historique rédigé par Luo Guanzhong, nous revivrons la fameuse période des Trois Royaumes ayant succédé à la fin de la dynastie Han.",
+        "releasedAt": "2019-05-23T00:00:00+00:00",
+        "comments": [ ],
+        "studios": [
+            {
+                "id": 1,
+                "name": "Creative Assembly"
+            }
+        ],
+        "categories": [
+            {
+                "id": 4,
+                "name": "Stratégie"
+            }
+        ]
     },
     {
         "id": 3,
-        "title": "Detroit : Become Human",
-        "releaseDate": "2019-12-12",
-        "studio": "Quantic Dream",
-        "category": "Aventure",
-        "poster": "poster-dbh.png",
-        "comments": []
+        "name": "Star Wars : Squadrons",
+        "posterFile": "poster-sws.png",
+        "description": "Star Wars : Squadrons est un jeu de combat spatial à la première personne. Vous incarnerez un pilote, et devrez contrôler les vaisseaux les plus emblématiques de la licence. Le jeu se déroule après les événement de l'épisode VI de la saga, Le Retour du Jedi. Il propose un mode histoire mais aussi un mode multi en 5c5.",
+        "releasedAt": "2020-10-02T00:00:00+00:00",
+        "comments": [ ],
+        "studios": [
+            {
+                "id": 2,
+                "name": "Electronic Arts"
+            },
+            {
+                "id": 5,
+                "name": "Motive Studios"
+            }
+        ],
+        "categories": [
+            {
+                "id": 3,
+                "name": "Shooter"
+            }
+        ]
     },
     {
         "id": 4,
-        "title": "Star Wars : Squadrons",
-        "releaseDate": "2020-10-02",
-        "studio": "Motive Studios,Electronic Arts",
-        "category": "Shooter",
-        "poster": "poster-sws.png",
-        "comments": []
+        "name": "Detroit : Become Human",
+        "posterFile": "poster-dbh.png",
+        "description": "Detroit : Become Human est un jeu d’aventure-action développé par Quantic Dream. Le joueur pourra incarner 3 personnages différents évoluant chacun de leur côté au sein d'histoires s'entrecoupant les unes les autres. L'action se déroule à Detroit, la ville abritant le principal site de production d'androïdes. La plupart d'entres eux se contentent de s'employer aux tâches pour lesquelles ils ont été créés, tandis que d'autres rêvent d'une autre vie... Leur présence ne fait toutefois pas l'unanimité, de nombreux humains s'inquiétant de leur futur dans ce monde machinique.",
+        "releasedAt": "2019-12-12T00:00:00+00:00",
+        "comments": [ ],
+        "studios": [
+            {
+                "id": 4,
+                "name": "Quantic Dream"
+            }
+        ],
+        "categories": [
+            {
+                "id": 2,
+                "name": "Aventure"
+            }
+        ]
     },
     {
         "id": 5,
-        "title": "Watch Dogs Legion",
-        "releaseDate": "2020-10-29",
-        "studio": "Ubisoft",
-        "category": "Action,Aventure",
-        "poster": "poster-wdl.png",
-        "comments": []
+        "name": "Watch Dogs Legion",
+        "posterFile": "poster-wdl.png",
+        "description": "Watch Dogs Legion, troisième épisode de la série d'Ubisoft, vous plonge dans le Londres post-Brexit ultra-connecté et surveillé. Vous aurez la possibilité d'hacker n'importe qui, mais aussi d'en prendre possession. Chaque mort est permanente, d'où l'utilité de prendre possession des PNJ.",
+        "releasedAt": "2020-10-29T00:00:00+00:00",
+        "comments": [ ],
+        "studios": [
+            {
+                "id": 3,
+                "name": "Ubisoft"
+            }
+        ],
+        "categories": [
+            {
+                "id": 1,
+                "name": "Action"
+            },
+            {
+                "id": 2,
+                "name": "Aventure"
+            }
+        ]
     }
+
 ]

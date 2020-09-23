@@ -1,17 +1,19 @@
 import React , {  useState , useContext , useEffect } from 'react';
 import GamesContext from './GamesContext'
 import './css/GameView.css';
+import axios from 'axios';
 import Api from '../Api'
 import CommentForm from './CommentForm';
 
 function GameInfo(props) {
+    //console.log(props.gameObject);
     let poster = "no-poster.svg";
     let dateString = "Non renseignée"
     let studiosNames = "Non renseigné"
     let categoriesNames = "Non renseignée"
     let name = "Inconnu"
-    let description = "Empty"
-    if( typeof props.gameObject === "array" ) {
+    let description = ""
+    if( typeof props.gameObject === "object" ) { // && props.gameObject.length > 0
         name = props.gameObject.name
         description = props.gameObject.description
         poster = props.gameObject.posterFile
@@ -19,33 +21,36 @@ function GameInfo(props) {
             poster = 'no-poster.svg';
         }
         //let dateString = "Non renseignée"
-        if( props.gameObject.releasedAt !== null || props.gameObject.releasedAt.date !== "" ) {
-            dateString = (props.getDateObjectMethod(props.gameObject.releasedAt.date)).toLocaleDateString('fr-FR', props.dateOptions)
+        if( props.gameObject.releasedAt !== null && props.gameObject.releasedAt !== "" ) {
+            dateString = (props.getDateObjectMethod(props.gameObject.releasedAt)).toLocaleDateString('fr-FR', props.dateOptions)
         }
         let separator = ' | '
         let studios = props.gameObject.studios
         //let studiosNames = "Non renseigné"
         if( studios.length > 0 ) {
-            studios.foreach( ( key, studio ) => {
+            studiosNames = "";
+            studios.forEach( ( studio , key ) => {
                 if(studio.name.trim() !== '' ) {
-                    separator = ' | '
+                    separator = <> <span class="text-secondary">|</span> </>
                     if( key === 0 ) {
                         separator = ''
                     }
-                    studiosNames += separator + studio.name
+                    studiosNames = <>{studiosNames}{separator}{studio.name}</>
                 }
             });
         }
         let categories = props.gameObject.categories
+        separator = ' | '
         //let categoriesNames = "Non renseignée"
         if( categories.length > 0 ) {
-            categories.foreach( ( key, category ) => {
+            categoriesNames = "";
+            categories.forEach( ( category , key ) => {
                 if(category.name.trim() !== '' ) {
-                    separator = ' | '
+                    separator = <> <span class="text-secondary">|</span> </>
                     if( key === 0 ) {
                         separator = ''
                     }
-                    categoriesNames += separator + category.name
+                categoriesNames = <>{categoriesNames}{separator}{category.name}</>
                 }
             });
         }
@@ -53,7 +58,7 @@ function GameInfo(props) {
     return (
         <React.Fragment>
         <h4 className="col-12 text-center my-2 text-primary user-select-none">{name}</h4>
-        <img className="col-6 text-center img-fluid my-2 p-0 border" src={"/" + poster} alt={"Affiche de " + name} />
+        <img className="col-6 text-center img-fluid my-2 p-0 border" src={"/img/" + poster} alt={"Affiche de " + name} />
         <p className="col-12 text-center my-2 user-select-none">Date de sortie : <span className="text-primary">{dateString}</span></p>
         <p className="col-12 text-center my-2 user-select-none">Catégorie : <span className="text-primary">{categoriesNames}</span></p>
         <p className="col-12 text-center my-2 user-select-none">Studio : <span className="text-primary">{studiosNames}</span></p>
@@ -63,10 +68,12 @@ function GameInfo(props) {
 }
 
 function Comment(props) {
+    //console.log(props.commentObject)
     let displayTime = true
     let dateString = '-'
-    if( props.gameObject.publishedAt !== null || props.gameObject.publishedAt.date !== "" ) {
-        dateString = (props.getDateObjectMethod(props.commentObject.publishedAt.date,displayTime)).toLocaleDateTimeString(props.commentDateOptions)
+    //console.log(props.getDateObjectMethod(props.commentObject.publishedAt,displayTime))
+    if( props.commentObject.publishedAt !== null && props.commentObject.publishedAt !== "" ) {
+        dateString = (props.getDateObjectMethod(props.commentObject.publishedAt,displayTime)).toLocaleString(props.commentDateOptions)
     }
     return (
         <div id={"comment-" + props.commentObject.id} key={props.commentObject.id} className="col-12 game-view-comment">
@@ -82,27 +89,77 @@ const GameView = (props) => {
         this.state = { items: this.props.items, item: (props.items.filter( item => item.num === parseInt(props.itemNum) ))[0] };
     }*/
 
+    //const contextValue = useContext(GamesContext)
+
     //const [ comments , setComments ] = useState(props.game.comments)
-    const [ game , setGame ] = useState([])
     
-    useEffect( () => {
-        Api.getApiGameWithId(props.gameId, setGame);
-    }, [game] );
+    //const [ game , setGame ] = useState(contextValue.games[0])
+    const [ game , setGame ] = useState({});
     
+    //Api.getApiGameWithId(props.gameId,setGame);
+    //Api.getGame(props.gameId,setGame);
+    /*axios.get('https://localhost:8000/game/1')
+      .then(response => {
+        //const datas = response.data;
+        console.log(response);
+        //setGame( datas );
+      });*/
+
+      /*async function fetchData() {
+        const res = await fetch('https://localhost:8000/game/'+props.gameId);
+        res
+          .json()
+          .then(res => console.log(res))
+          .catch(err => console.log(err));
+          await axios.get('https://localhost:8000/game/'+props.gameId)
+          .then(response => {
+            console.log(response.data);
+            setGame( response.data );
+          });
+      }
+      fetchData();*/
+
+    useEffect(() => {
+        props.fetchGame(setGame);
+    }, [props.fetchGame]);
+
+    /*useEffect( () => {
+        //Api.getApiGameWithId(props.gameId,setGame);
+        Api.getGame(props.gameId,setGame);
+        axios.get('https://localhost:8000/game/1')
+      .then(response => {
+        const datas = response.data;
+        console.log(response);
+        setGame( datas );
+      });*/
+      /*let ignoreb = false;    
+      async function fetchDatab() {
+        const responseb = await fetch('https://localhost:8000/game/'+props.gameId);
+        const jsonb = await responseb.json();
+        if (!ignoreb) setGame(jsonb);    
+      }
+      fetchDatab();
+      return () => { ignoreb = true };
+    }, [game] );*/
+
+    //console.log(game);
+
     //const contextValue = useContext(GamesContext) //[ games , updateGames , sortingMethod ]
 
     const dateOptions = { timeZone: 'UTC', year: 'numeric', month: '2-digit', day: '2-digit' }
 
     const getDateObject = (dateString , time = false ) => {
         let dateObj = dateString;
+        //console.log(time)
+        //console.log(typeof dateString)
         if( typeof dateString == "string" ) {
             if( time === false ) {
-                dateString = dateString.replace(/[Tt].+$/,'');
+                dateString = dateString.replace(/[Tt].+$/gi,'');
                 dateString = dateString.trim() + '-0-0-0'
             } else {
-                dateString = dateString.replace(/[^\s\d:]/,'');
-                dateString = dateString.trim().replace(/[:\s]/,'-');
+                dateString = dateString.replace(/[^\d\-]/gi,'-');
             }
+            //console.log(dateString)
             let dateArray = dateString.split('-');
             let year = parseInt(dateArray[0] , 10);
             let month = parseInt(dateArray[1] , 10) - 1;
@@ -110,15 +167,18 @@ const GameView = (props) => {
             let hour = parseInt(dateArray[3] , 10);
             let minute = parseInt(dateArray[4] , 10);
             let second = parseInt(dateArray[5] , 10);
+            //console.log(dateArray.map((date)=>parseInt(date)));
+            //console.log(new Date(Date.UTC(year,month,day,hour,minute,second)))
             dateObj = new Date(Date.UTC(year,month,day,hour,minute,second));
         }
         return dateObj;
     }
 
     const getComments = () => {
+        //console.log(game.comments);
         let resultComments;
         let commentDateOptions = { ...dateOptions , hour: '2-digit', minute: '2-digit', second: '2-digit' }
-        if( typeof game.comments === 'array' && game.comments.length > 0 ) {
+        if( typeof game.comments === 'object' && game.comments.length > 0 ) {
             game.comments.sort((a,b) => {
                 if(a.date < b.date) {
                     return 1;
@@ -135,9 +195,9 @@ const GameView = (props) => {
 
     const getCommentsTitle = () => {
         let title = 'Aucun commentaire';
-        if( typeof game.comments === 'array' && game.comments.length > 1 ) {
+        if( typeof game.comments === 'object' && game.comments.length > 1 ) {
             title = 'Commentaires';
-        } else if( typeof game.comments === 'array' && game.comments.length > 0 ) {
+        } else if( typeof game.comments === 'object' && game.comments.length > 0 ) {
             title = 'Commentaire';
         }
         return title;
@@ -152,7 +212,7 @@ const GameView = (props) => {
         commentsUpdated.push(newComment)
         setComments(commentsUpdated)
         let gamesUpdated = contextValue.games
-        gamesUpdated.foreach( (gameObject) => {
+        gamesUpdated.forEach( (gameObject) => {
             if( gameObject.id === props.game.id ) {
                 gameObject.comments = commentsUpdated
             }
