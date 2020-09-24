@@ -314,21 +314,21 @@ const App = () => {
  //console.log(games);
 
   useEffect( () => {
-    //Api.getApiGames(setGames);
+    Api.getApiGames(setGames);
     //Api.getGames(setGames);
     /*axios.get('https://localhost:8000/games')
       .then(response => {
         const datas = response.data;
         setGames( datas );
       });*/
-      let ignore = false;    
+      /*let ignore = false;    
       async function fetchData() {
         const response = await fetch('https://localhost:8000/games');
         const json = await response.json();
         if (!ignore) setGames(json);    
       }
       fetchData();
-      return () => { ignore = true };
+      return () => { ignore = true };*/
   }, [games] );
 
   const contextValue = {

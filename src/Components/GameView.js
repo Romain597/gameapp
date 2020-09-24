@@ -116,7 +116,7 @@ const GameView = (props) => {
     }
     const [ game , setGame ] = useState(empty);
     
-    Api.getApiGameWithId(props.gameId,setGame);
+    //Api.getApiGameWithId(props.gameId,setGame);
     //Api.getGame(props.gameId,setGame);
     /*axios.get('https://localhost:8000/game/'+props.gameId)
       .then(response => {
@@ -152,10 +152,10 @@ const GameView = (props) => {
         props.fetchGame(setGame);
     }, [props.fetchGame]);*/
 
-    /*useEffect( () => {
+    useEffect( () => {
         Api.getApiGameWithId(props.gameId,setGame);
         //Api.getGame(props.gameId,setGame);
-        axios.get('https://localhost:8000/game/1')
+        /*axios.get('https://localhost:8000/game/1')
       .then(response => {
         const datas = response.data;
         console.log(response);
@@ -168,8 +168,8 @@ const GameView = (props) => {
         if (!ignoreb) setGame(jsonb);    
       }
       fetchDatab();
-      return () => { ignoreb = true };
-    }, [] );*/
+      return () => { ignoreb = true };*/
+    });
 
     //console.log(game);
 
