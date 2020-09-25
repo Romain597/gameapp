@@ -96,6 +96,11 @@ const GameList = () => {
         return dateObj;
     }
 
+    const getDaysInMonth = ( year , month ) => {
+        // Here January is 0 based
+        return new Date( year , month + 1 , 0 ).getDate();
+    }
+
     const getGameList = () => {
         //console.log(contextValue.games)
         return contextValue.games.map( (game) => (

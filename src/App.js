@@ -219,6 +219,11 @@ const App = () => {
       return dateObj;
   }
 
+  const getDaysInMonth = ( year , month ) => {
+    // Here January is 0 based
+    return new Date( year , month + 1 , 0 ).getDate();
+  }
+
   const handleSortClick = (event) => {
     //console.log(event.target.id)
     console.log(games)

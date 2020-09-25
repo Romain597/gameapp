@@ -12,12 +12,16 @@ function GameInfo(props) {
     let studiosNames = "Non renseigné"
     let categoriesNames = "Non renseignée"
     let name = "Inconnu"
-    let description = ""
+    let description = "-"
     if( typeof props.gameObject === "object" ) { // && props.gameObject.length > 0
-        name = props.gameObject.name
-        description = props.gameObject.description
+        if( props.gameObject.name.trim() != "" ) {
+            name = props.gameObject.name
+        }
+        if( props.gameObject.description.trim() != "" ) {
+            description = props.gameObject.description
+        }
         poster = props.gameObject.posterFile
-        if( poster === null || poster.trim() === "" ) {
+        if( poster === null || poster.trim() == "" ) {
             poster = 'no-poster.svg';
         }
         //let dateString = "Non renseignée"
@@ -29,30 +33,36 @@ function GameInfo(props) {
         //let studiosNames = "Non renseigné"
         if( studios.length > 0 ) {
             studiosNames = "";
-            studios.forEach( ( studio , key ) => {
+            studios.forEach( ( studio , index ) => {
                 if(studio.name.trim() !== '' ) {
-                    separator = <> <span class="text-secondary">|</span> </>
-                    if( key === 0 ) {
+                    separator = <> <span key={index} className="text-secondary">|</span> </>
+                    if( index  === 0 ) {
                         separator = ''
                     }
                     studiosNames = <>{studiosNames}{separator}{studio.name}</>
                 }
             });
         }
+        if( studiosNames.length == 0 ) {
+            studiosNames = "Non renseigné"
+        }
         let categories = props.gameObject.categories
         separator = ' | '
         //let categoriesNames = "Non renseignée"
         if( categories.length > 0 ) {
             categoriesNames = "";
-            categories.forEach( ( category , key ) => {
+            categories.forEach( ( category , index ) => {
                 if(category.name.trim() !== '' ) {
-                    separator = <> <span class="text-secondary">|</span> </>
-                    if( key === 0 ) {
+                    separator = <> <span key={index} className="text-secondary">|</span> </>
+                    if( index === 0 ) {
                         separator = ''
                     }
                 categoriesNames = <>{categoriesNames}{separator}{category.name}</>
                 }
             });
+        }
+        if( categoriesNames.length == 0 ) {
+            categoriesNames = "Non renseignée"
         }
     }
     return (
@@ -169,11 +179,17 @@ const GameView = (props) => {
       }
       fetchDatab();
       return () => { ignoreb = true };*/
-    });
+    }, [game] );
 
     //console.log(game);
 
     //const contextValue = useContext(GamesContext) //[ games , updateGames , sortingMethod ]
+
+    /*const [ comments , setComments ] = useState(game.comments);
+    
+    useEffect( () => {
+        setComments(game.comments);
+    }, [game.comments] );*/
 
     const dateOptions = { timeZone: 'UTC', year: 'numeric', month: '2-digit', day: '2-digit' }
 
@@ -203,8 +219,14 @@ const GameView = (props) => {
         return dateObj;
     }
 
+    const getDaysInMonth = ( year , month ) => {
+        // Here January is 0 based
+        return new Date( year , month + 1 , 0 ).getDate();
+    }
+
     const getComments = () => {
         //console.log(game.comments);
+        //console.log(comments);
         let resultComments;
         let commentDateOptions = { ...dateOptions , hour: '2-digit', minute: '2-digit', second: '2-digit' }
         if( typeof game.comments === 'object' && game.comments.length > 0 ) {
@@ -215,8 +237,8 @@ const GameView = (props) => {
                     return -1;
                 }
             });
-            resultComments = game.comments.map( comment =>
-                <Comment commentObject={comment} getDateObjectMethod={getDateObject} commentDateOptions={commentDateOptions} />
+            resultComments = game.comments.map( (comment,index) =>
+                <Comment key={index} commentObject={comment} getDateObjectMethod={getDateObject} commentDateOptions={commentDateOptions} />
             );
         }
         return resultComments;
@@ -232,12 +254,53 @@ const GameView = (props) => {
         return title;
     }
 
+    /*const getCommentPostId  = (postResponse) => {
+        let commentPostId = null;
+        if( typeof postResponse === 'string' ) {
+            commentPostId = parseInt(postResponse.replace(/^[^\<\>]*\<\s*(\d+)\s*\>[^\<\>]*$/gi,"$1"),10);
+        }
+        return commentPostId;
+    }*/
+
     const addComment = (author,text) => {
-        /*let num = parseInt(game.comments.length) + 1
         let currentDate = new Date()
-        let dateString = currentDate.getUTCFullYear() + "-" + currentDate.getUTCMonth() + "-" + currentDate.getUTCDay();
-        let newComment = { "id": num , "addDate": dateString , "author": author , "text": text }
-        let commentsUpdated = game.comments;
+        let postDateString = currentDate.getUTCFullYear() + "_" + currentDate.getUTCMonth() + "_" + currentDate.getUTCDay() + "_" + currentDate.getUTCHours() + "_" + currentDate.getUTCMinutes() + "_" + currentDate.getUTCSeconds();
+        const commentPost = new URLSearchParams();
+        commentPost.append('gameId', game.id);
+        commentPost.append('author', author.trim());
+        commentPost.append('publishedDate', postDateString.trim());
+        commentPost.append('comment', text.trim());
+        //let commentPost = { 'gameId': game.id, 'author': author, 'publishedDate': postDateString, 'comment': text }
+        //console.log(getCommentPostId('Success : Saved new comment with the identification number <24>.'));
+        Api.setApiNewComment( commentPost );
+        /*//
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify([commentPost])
+        };
+        fetch('https://localhost:8000/game/comment', requestOptions)
+            .then(response => response.json())
+            .then(data => console.log(data));
+        //*/ 
+        /*if( commentPostId === null ) {
+            commentPostId = parseInt(comments.length) + 1
+        }*/
+        let num = parseInt(game.comments.length) + 1
+        let newComment = {
+                            "id": num,
+                            "author": author,
+                            "publishedAt": currentDate.toJSON(),
+                            "text": text
+                        }
+        /*let commentsUpdated = comments;
+        commentsUpdated.push(newComment)
+        setComments(commentsUpdated)*/
+        let gamesUpdated = game;
+        gamesUpdated.comments.push(newComment)
+        setGame(gamesUpdated)
+        //console.log(comments)
+        /*let commentsUpdated = game.comments;
         commentsUpdated.push(newComment)
         setComments(commentsUpdated)
         let gamesUpdated = contextValue.games
@@ -247,14 +310,6 @@ const GameView = (props) => {
             }
         })
         contextValue.updateGames(gamesUpdated)*/
-        /*let num = parseInt(this.state.item.comments.length) + 1
-        let newComment = { "num": num , "date": new Date() , "author": author , "text": text }
-        let items = this.state.items
-        items.forEach((item) => ( parseInt(item.num) === parseInt(this.props.itemNum) ) ? item.comments.push(newComment) : false )
-        let datas = JSON.stringify(items)
-        localStorage.clear()
-        localStorage.setItem("items",datas)
-        this.setState({items: items})*/
     }
 
     return (
