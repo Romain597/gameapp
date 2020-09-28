@@ -4,6 +4,7 @@ import './css/GameView.css';
 import axios from 'axios';
 import Api from '../Api'
 import CommentForm from './CommentForm';
+import { useParams } from "react-router-dom";
 
 function GameInfo(props) {
     //console.log(props.gameObject);
@@ -104,6 +105,10 @@ const GameView = (props) => {
     //const [ comments , setComments ] = useState(props.game.comments)
     
     //const [ game , setGame ] = useState(contextValue.games[0])
+
+    const { gameId } = useParams();
+    //console.log(gameId);
+
     const empty = {
         "id": 0,
         "name": "",
@@ -161,9 +166,9 @@ const GameView = (props) => {
     /*useEffect(() => {
         props.fetchGame(setGame);
     }, [props.fetchGame]);*/
-
+    //props.gameId
     useEffect( () => {
-        Api.getApiGameWithId(props.gameId,setGame);
+        Api.getApiGameWithId(gameId,setGame);
         //Api.getGame(props.gameId,setGame);
         /*axios.get('https://localhost:8000/game/1')
       .then(response => {

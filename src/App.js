@@ -8,7 +8,8 @@ import axios from 'axios';
 import {
   BrowserRouter as Router,
   Switch,
-  Route
+  Route,
+  useParams
 } from "react-router-dom";
 
 function ButtonSort(props) {
@@ -167,11 +168,15 @@ function Single(props) {
   Api.getApiGameWithId(props.gameId,setGameMethod);
 }, [props.gameId]);*/
 
+/*const { gameId } = useParams();
+    console.log(gameId);*/
+
 //fetchGame={fetchGame}
+//gameId={props.gameId}
   return (
     <div className="App">
       <div className="container">
-        <GameView gameId={props.gameId} />
+        <GameView />
       </div>
     </div>
   );
@@ -191,6 +196,7 @@ const App = () => {
   
   const [ games , setGames ] = useState( [] );
   
+  let sortingOptions = {};
 
   //console.log(games);
   /*const datas = Api.getGames();
@@ -225,8 +231,32 @@ const App = () => {
   }
 
   const handleSortClick = (event) => {
+    switch(event.target.id) {
+      case "sort-alpha-asc":
+        sortingOptions = { orderField: "name", orderBy: "asc" };
+      break;
+      case "sort-alpha-desc":
+        sortingOptions = { orderField: "name", orderBy: "desc" };
+      break;
+      case "sort-date-asc":
+        sortingOptions = { orderField: "released", orderBy: "asc" };
+      break;
+      case "sort-date-desc":
+        sortingOptions = { orderField: "released", orderBy: "desc" };
+      break;
+      case "reset-sort":
+        sortingOptions = { };
+      break;
+      default:
+        sortingOptions = { };
+    }
+    Api.getApiGames(1 , setGames , sortingOptions);
+  }
+
+  /*const handleSortClick = (event) => {
     //console.log(event.target.id)
-    console.log(games)
+    //console.log('1')
+    //console.log(games)
     //console.log(contextValue.games)
     let gamesSorted = games;
     //let type;
@@ -259,9 +289,12 @@ const App = () => {
     //console.log(gamesSorted);
     if( typeof method === 'function' ) {
       gamesSorted.sort(method());
-      console.log(gamesSorted);
+      //console.log(gamesSorted);
     }
     setGames(gamesSorted);
+    //console.log('2')
+    //console.log(games)
+    //console.log(contextValue.games)
   }
 
   const sortByAlphaAsc = () => {
@@ -314,12 +347,13 @@ const App = () => {
           return -1;
       }
     });
-  }
+  }*/
 
  //console.log(games);
 
   useEffect( () => {
-    Api.getApiGames(setGames);
+    Api.getApiGames(1 , setGames , sortingOptions);
+    //getApiGamesWithSorting( orderField , orderBy , pagination , updateGamesMethod )
     //Api.getGames(setGames);
     /*axios.get('https://localhost:8000/games')
       .then(response => {
@@ -334,7 +368,7 @@ const App = () => {
       }
       fetchData();
       return () => { ignore = true };*/
-  }, [games] );
+  }, [] );
 
   const contextValue = {
     games: games,
@@ -342,6 +376,21 @@ const App = () => {
     sortingMethod: handleSortClick
   }
  
+  /*let max;
+  Api.getApiGamesCount(max)
+  console.log(max);*/
+  //console.log(Api.getApiGamesCount());
+  /*let max;
+  axios( { method: 'get', url: '/games/count', responseType: 'text' } )
+    .then(function (response) {
+      // handle success
+      //console.log(response);
+      //console.log(response.data);
+      //max = parseInt(response.data, 10);
+      max=response.data;
+    })
+    console.log(max);*/
+
   /*const contextValue = {
     sortingMethod: handleSortClick
   }*/
@@ -351,14 +400,19 @@ const App = () => {
 
   return (
     <GamesContext.Provider value={ contextValue } >
-      <Router>
-          <Switch>
-            <Route exact path="/GameApp/gameapp/public" render={ () => ( <Home /> ) } />
-            <Route path="/GameApp/gameapp/public/view/:gameid" render={ ( props ) => ( <Single gameId={ props.match.params.gameid } /> ) } />
-          </Switch>
-      </Router>
+        <Router>
+            <Switch>
+                <Route exact path="/GameApp/gameapp/public">
+                    <Home />
+                </Route>
+                <Route path="/GameApp/gameapp/public/view/:gameId">
+                    <Single />
+                </Route>
+            </Switch>
+        </Router>
     </GamesContext.Provider>
   );
 }
+//<Single gameId={ props.match.params.gameid } />
 
 export default App;
