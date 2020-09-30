@@ -1,8 +1,9 @@
-import React , { useState, useEffect } from 'react';
+import React , { useState, useEffect, useContext } from 'react';
 import GameList from './Components/GameList';
 import GameView from './Components/GameView';
 import GameClassify from './Components/GameClassify';
 import Api from './Api'
+import SortingContext from './Components/SortingContext';
 import {
   BrowserRouter as Router,
   Switch,
@@ -42,35 +43,37 @@ function ButtonSortList(props) {
 
   const [ redirectPath , setRedirectPath ] = useState( "" );
 
-  const [ sortingOptions , setSortingOptions ] = useState( props.sortingOptions );
+  //const [ sortingOptions , setSortingOptions ] = useState( props.sortingOptions );
+
+  let contextValue = useContext(SortingContext);
 
   useEffect( () => {
-    Api.getApiGames(1 , props.updateGames , sortingOptions);
-  }, [sortingOptions] );
+    Api.getApiGames(1 , props.updateGames , contextValue.sortingOptions);
+  }, [contextValue.sortingOptions] );
 
   const handleSortClick = (event) => {
     let prevSortingOptions = {};
-    if( sortingOptions.hasOwnProperty('classifyField') === true ) {
-        prevSortingOptions = { classifyField: sortingOptions.classifyField }
+    if( contextValue.sortingOptions.hasOwnProperty('classifyField') === true ) {
+        prevSortingOptions = { classifyField: contextValue.sortingOptions.classifyField }
     }
     switch(event.target.id) {
       case "sort-alpha-asc":
-        setSortingOptions({ orderField: "name", orderBy: "asc", ...prevSortingOptions });
+        contextValue.updateSortingMethod({ orderField: "name", orderBy: "asc", ...prevSortingOptions });
       break;
       case "sort-alpha-desc":
-        setSortingOptions({ orderField: "name", orderBy: "desc", ...prevSortingOptions });
+        contextValue.updateSortingMethod({ orderField: "name", orderBy: "desc", ...prevSortingOptions });
       break;
       case "sort-date-asc":
-        setSortingOptions({ orderField: "released", orderBy: "asc", ...prevSortingOptions });
+        contextValue.updateSortingMethod({ orderField: "released", orderBy: "asc", ...prevSortingOptions });
       break;
       case "sort-date-desc":
-        setSortingOptions({ orderField: "released", orderBy: "desc", ...prevSortingOptions });
+        contextValue.updateSortingMethod({ orderField: "released", orderBy: "desc", ...prevSortingOptions });
       break;
       case "reset-sort":
-        setSortingOptions({ ...prevSortingOptions });
+        contextValue.updateSortingMethod({ ...prevSortingOptions });
       break;
       default:
-        setSortingOptions({ ...prevSortingOptions });
+        contextValue.updateSortingMethod({ ...prevSortingOptions });
     }
   }
 
@@ -79,9 +82,8 @@ function ButtonSortList(props) {
       let select;
       let choice;
       let selectedValue;
-      let newSortingOptions = sortingOptions;
+      let newSortingOptions = contextValue.sortingOptions;
       let redirectValue = "";
-      //console.log(newSortingOptions);
       if( targetId === "classify-by-category" ) {
         redirectValue = "categories";
         select = document.getElementById("category-select");
@@ -115,18 +117,21 @@ function ButtonSortList(props) {
               newSortingOptions.classifyId = selectedValue;
           }
       }
-      //console.log(selectedValue);
-      //console.log(newSortingOptions);
       if( selectedValue !== null && selectedValue !== "" ) {
-          setSortingOptions(newSortingOptions);
+          contextValue.updateSortingMethod(newSortingOptions);
           Api.getApiGames(1 , props.updateGames , newSortingOptions);
           // remove focus
           document.getElementById(targetId).blur();
       }
       else {
           // redirect path to ClassifyPage
-          setRedirectPath("/GameApp/gameapp/public/list-by/" + redirectValue);
+          setRedirectPath("/GameApp/gameapp/public/games-by-" + redirectValue);
       }
+  }
+
+  const handleGamesClassifyClick = () => {
+      // redirect path to ClassifyPage
+      setRedirectPath("/GameApp/gameapp/public/games-by-alphabetic");
   }
 
   const getRedirectBalise = () => {
@@ -158,6 +163,11 @@ function ButtonSortList(props) {
     {getRedirectBalise()}
     <header>
         <div className="row justify-content-between align-items-stretch my-4">
+            <div className="col-12">
+                <button id="classify-games" className="btn btn-secondary my-2 w-100" onClick={handleGamesClassifyClick}>Voir les jeux classés par lettres</button>
+            </div>
+        </div>
+        <div className="row justify-content-between align-items-stretch my-4">
             <ButtonClassify classifyMethod={handleClassifyClick} datas={categories} selectId="category-select" selectClass="form-control my-2" selectLabel="Choisisez une catégorie" colClass="col" btnId="classify-by-category" btnClass="btn btn-warning my-2 w-100" >Classifier par catégorie</ButtonClassify>
             <ButtonClassify classifyMethod={handleClassifyClick} datas={studios} selectId="studio-select" selectClass="form-control my-2" selectLabel="Choisisez un studio" colClass="col" btnId="classify-by-studio" btnClass="btn btn-warning my-2 w-100" >Classifier par studio</ButtonClassify>
         </div>
@@ -186,14 +196,28 @@ function LetterSortList(props) {
 
   const getLettersList = () => {
       let lettersList;
-      letterArray.forEach( (letter) => {
+      letterArray.forEach( (letter , index) => {
+          //let method = handleSelectLetterClick;
           let stateClass = "";
+          let emptySymbol = '...';
           if( props.selectLetter.toUpperCase() === letter.toUpperCase() ) {
-              stateClass = "active"
-          }/* else if(true) {
-              stateClass = "disabled"
+              stateClass = " active";
+          }
+          /*let resultFind = props.alphabeticList.find(element => element.first_letter === letter.toLowerCase());
+          if( resultFind === undefined ) {
+              stateClass = " disabled";
+              method = null;
+          } else if( typeof resultFind === "object" && parseInt(resultFind.games_count , 10) === 0 ) {
+              stateClass = " disabled";
+              method = null;
+          }
+          lettersList = <>{lettersList}<li className={"page-item " + stateClass}><a className="page-link" href="#" onClick={method} >{letter}</a></li></>;*/
+          let resultFind = props.alphabeticList.find(element => element.first_letter === letter.toLowerCase());
+          if( typeof resultFind === "object" && parseInt(resultFind.games_count , 10) > 0 ) {
+              lettersList = <>{lettersList}<li className={"page-item " + stateClass}><a className="page-link" href="#" onClick={handleSelectLetterClick} >{letter}</a></li></>;
+          }/* else if( index === 0 || ( index > 0 && props.alphabeticList.find(element => element.first_letter === letterArray[index-1].toLowerCase()) !== undefined ) ) {
+              lettersList = <>{lettersList}<li className={"page-item disabled"}><a className="page-link" href="#" >{emptySymbol}</a></li></>;
           }*/
-          lettersList = <>{lettersList}<li className={"page-item" + stateClass}><a className="page-link" href="#" onClick={handleSelectLetterClick} >{letter}</a></li></>;
       });
       return (
         <nav aria-label="Choix par lettre de l'aplabet">
@@ -219,7 +243,13 @@ function ClassifyPage(props) {
 
   const { classifyType } = useParams();
 
-  const [ letter , setLetter ] = useState( "A" );
+  const [ alphabeticList , setAlphabeticList ] = useState( [] );
+
+  useEffect( () => {
+    Api.getApiAlphabeticListDatas(classifyType , setAlphabeticList);
+  }, [] );
+
+  const [ letter , setLetter ] = useState( "" );
 
   const [ datas , setDatas ] = useState( [] );
 
@@ -229,46 +259,28 @@ function ClassifyPage(props) {
 
   const getClassifyTitle = () => {
       if( classifyType.trim() !== "" ) {
-          let title = 'Liste de jeux PC classer par studios ou catégories';
-          if( classifyType === "studios" ) {
-              title = 'Liste de jeux PC classer par studios';
-          } else if( classifyType === "categories" ) {
-              title = 'Liste de jeux PC classer par catégories';
+          let title = 'Liste de jeux PC classer';
+          switch(classifyType) {
+              case 'categories':
+                  title += ' par catégories';
+              break;
+              case 'studios':
+                  title += ' par studios';
+              break;
+              case 'games':
+                  title += ' par lettres';
+              break;
           }
           return title;
       }
       return null;
   }
 
-  const empty = {
-      "id": 0,
-      "name": "",
-      "posterFile": "",
-      "description": "",
-      "releasedAt": "",
-      "comments": [ ],
-      "studios": [
-          {
-              "id": 0,
-              "name": ""
-          }
-      ],
-      "categories": [
-          {
-              "id": 0,
-              "name": ""
-          }
-      ]
-  }
-
-  //datas.forEach((data) => { return ({games: empty, ...data}); });
-  //console.log(datas);
-
   return (
     <div className="App">
       <div className="container">
         <h2 className="text-center mt-3 mb-4 user-select-none">{getClassifyTitle()}</h2>
-        <LetterSortList selectLetter={letter} updateLetter={setLetter} updateDatas={setDatas} classifyBy={classifyType} />
+        <LetterSortList alphabeticList={alphabeticList} selectLetter={letter} updateLetter={setLetter} updateDatas={setDatas} classifyBy={classifyType} />
         <GameClassify datasList={datas} classifyBy={classifyType} />
       </div>
     </div>
@@ -306,32 +318,33 @@ function SinglePage(props) {
 
 const App = () => {
 
-  let sortingOptions = {};
+  const [ sortingOptions , setSortingOptions ] = useState( {} );
+
+  let contextValue = {
+      sortingOptions: sortingOptions,
+      updateSortingMethod: setSortingOptions
+  }
 
   return (
-      <Router>
-          <Switch>
-              <Route exact path="/GameApp/gameapp/public">
-                  <HomePage sortingOptions={sortingOptions} />
-              </Route>
-              <Route path="/GameApp/gameapp/public/view/:gameId">
-                  <SinglePage sortingOptions={sortingOptions} />
-              </Route>
-              <Route path="/GameApp/gameapp/public/list-by/:classifyType">
-                  <ClassifyPage />
-              </Route>
-          </Switch>
-      </Router>
+      <SortingContext.Provider value={contextValue}>
+          <Router>
+              <Switch>
+                  <Route exact path="/GameApp/gameapp/public">
+                      <HomePage sortingOptions={sortingOptions} />
+                  </Route>
+                  <Route path="/GameApp/gameapp/public/view/:gameId">
+                      <SinglePage sortingOptions={sortingOptions} />
+                  </Route>
+                  <Route path="/GameApp/gameapp/public/:classifyType-by-alphabetic">
+                      <ClassifyPage />
+                  </Route>
+                  <Route path="/GameApp/gameapp/public/games-by-:classifyType">
+                      <ClassifyPage />
+                  </Route>
+              </Switch>
+          </Router>
+      </SortingContext.Provider>
   );
 }
-
-/*
-<Redirect
-            to={{
-              pathname: "/GameApp/gameapp/public/list-by/",
-              state: { from: location }
-            }}
-          />
-*/
 
 export default App;

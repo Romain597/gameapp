@@ -5,7 +5,7 @@ import {
   } from "react-router-dom";
 
 function InListTitle(props) {
-    return (<h4 className="col-12 my-4 text-center px-4 py-2 border">{props.children}</h4>);
+    return (<h4 className="col-12 my-4 text-center px-4 py-2 border rounded user-select-none">{props.children}</h4>);
 }
 
 const GameClassify = (props) => {
@@ -14,21 +14,26 @@ const GameClassify = (props) => {
 
         let datasToRender = [];
         let countNum = 0;
-        //console.log(props.datasList);
 
         if( props.datasList.length > 0 ) {
             props.datasList.forEach( (data) => {
-                let games = data.games;
-                //console.log(data);
-                if( games.length > 0 ) {
+                if( props.classifyBy === "games" ) {
                     countNum++;
-                    datasToRender.push(<InListTitle key={countNum} >{data.name}</InListTitle>);
-                    games.forEach( (game) => {
+                    datasToRender.push(<Link to={"/GameApp/gameapp/public/view/" + data.id} key={countNum} className="col-5 m-1 align-self-stretch px-4 py-1 border list-group-item list-group-item-action" id={"game-" + data.id}>
+                                        <GameListInfo gameObject={data} fieldToExclude={props.classifyBy} />
+                                    </Link>);
+                } else {
+                    let games = data.games;
+                    if( games.length > 0 ) {
                         countNum++;
-                        datasToRender.push(<Link to={"/GameApp/gameapp/public/view/" + game.id} key={countNum} className="col-5 m-1 align-self-stretch px-4 py-1 border list-group-item list-group-item-action" id={"game-" + game.id}>
-                                            <GameListInfo gameObject={game} />
-                                        </Link>);
-                    });
+                        datasToRender.push(<InListTitle key={countNum} >{data.name}</InListTitle>);
+                        games.forEach( (game) => {
+                            countNum++;
+                            datasToRender.push(<Link to={"/GameApp/gameapp/public/view/" + game.id} key={countNum} className="col-5 m-1 align-self-stretch px-4 py-1 border list-group-item list-group-item-action" id={"game-" + game.id}>
+                                                <GameListInfo gameObject={game} fieldToExclude={props.classifyBy} />
+                                            </Link>);
+                        });
+                    }
                 }
             });
         }
@@ -37,7 +42,7 @@ const GameClassify = (props) => {
     }
 
     return (
-        <section className="row my-5">
+        <section className="row mb-5 mt-4">
             <div className="col">
                 <div className="row justify-content-center align-items-stretch">
                     {getGameList()}

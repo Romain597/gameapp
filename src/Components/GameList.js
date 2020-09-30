@@ -1,10 +1,13 @@
-import React from 'react';
+import React , { useContext } from 'react';
 import GameListInfo from './GameListInfo';
+import SortingContext from './SortingContext';
 import {
     Link
   } from "react-router-dom";
 
 const GameList = (props) => {
+
+    let contextValue = useContext(SortingContext);
 
     const getGameList = () => {
         return props.games.map( (game) => (
@@ -15,32 +18,63 @@ const GameList = (props) => {
     }
 
     const getClassifyTitle = () => {
-        //console.log(props.sortingOptions);
-        if( props.sortingOptions.hasOwnProperty('classifyId') === true && props.sortingOptions.hasOwnProperty('classifyField') === true ) {
-            let title = 'Classer par un studio ou une catégorie';
-            if( props.sortingOptions.classifyField === "studio" ) {
-                title = 'Classer par un studio';
-
-            } else if( props.sortingOptions.classifyField === "category" ) {
-                title = 'Classer par une catégorie';
-
+        if( contextValue.sortingOptions.hasOwnProperty('classifyField') === true ) {
+            let title = 'Studio ou catégorie';
+            if( contextValue.sortingOptions.classifyField === "studio" ) {
+                title = 'Studio :';
+                if( contextValue.sortingOptions.hasOwnProperty('classifyId') === true && props.games.length > 0 ) {
+                    let find = false;
+                    props.games.forEach((game) => {
+                        if( game.studios.length > 0 && find === false ) {
+                            game.studios.forEach((studio) => {
+                                if( studio.id === parseInt(contextValue.sortingOptions.classifyId, 10) && find === false ) {
+                                    title += ' ' + studio.name;
+                                    find = true;
+                                    return true;
+                                }
+                            });
+                        } else if( find === true ) {
+                            //break;
+                            return true;
+                        }
+                    });
+                }
+            } else if( contextValue.sortingOptions.classifyField === "category" ) {
+                title = 'Catégorie :';
+                if( contextValue.sortingOptions.hasOwnProperty('classifyId') === true && props.games.length > 0 ) {
+                    let find = false;
+                    props.games.forEach((game) => {
+                        if( game.categories.length > 0 && find === false ) {
+                            game.categories.forEach((category) => {
+                                if( category.id === parseInt(contextValue.sortingOptions.classifyId, 10) && find === false ) {
+                                    title += ' ' + category.name;
+                                    find = true;
+                                    return true;
+                                }
+                            });
+                        } else if( find === true ) {
+                            //break;
+                            return true;
+                        }
+                    });
+                }
             }
-            return (<h3>{title}</h3>);
+            return (<h4 className="col-12 mb-3 mt-1 text-center px-4 py-2 text-center user-select-none">{title}</h4>);
         }
         return null;
     }
 
     return (
-        <>
-        {getClassifyTitle()}
         <section className="row my-5">
-            <div className="col">
+            <>
+            {getClassifyTitle()}
+            <div className="col-12">
                 <div className="row justify-content-center align-items-stretch">
                     {getGameList()}
                 </div>
             </div>
+            </>
         </section>
-        </>
     );
 }
 
