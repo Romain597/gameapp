@@ -175,30 +175,13 @@ function ButtonSortList(props) {
 
 function LetterSortList(props) {
 
-  const letterArray = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
-
-  const handleSelectLetterClick = (event) => {
-      event.preventDefault();
-      let letter = event.target.innerText;
-      props.updateLetter(letter);
-      Api.getApiGamesWithClassify( letter , props.updateDatas , props.classifyBy );
-  }
-
-  const getLettersList = () => {
-      let lettersList;
-      letterArray.forEach( (letter) => {
-          let stateClass = "";
-          if( props.selectLetter.toUpperCase() === letter.toUpperCase() ) {
-              stateClass = "active"
-          }/* else if(true) {
-              stateClass = "disabled"
-          }*/
-          lettersList = <>{lettersList}<li className={"page-item" + stateClass}><a className="page-link" href="#" onClick={handleSelectLetterClick} >{letter}</a></li></>;
-      });
+  const getLetterList = () => {
       return (
-        <nav aria-label="Choix par lettre de l'aplabet">
-            <ul className="pagination justify-content-center my-4">
-                {lettersList}
+        <nav aria-label="Menu de lettre">
+            <ul class="pagination justify-content-center my-4">
+                <li class="page-item active"><a class="page-link" href="#">A</a></li>
+                <li class="page-item"><a class="page-link" href="#">B</a></li>
+                <li class="page-item disabled"><a class="page-link" href="#">C</a></li>
             </ul>
         </nav>
       );
@@ -207,71 +190,11 @@ function LetterSortList(props) {
   return (
     <header>
         <nav aria-label="Menu de lettre">
-            <ul className="pagination justify-content-center my-4">
-              {getLettersList()}
+            <ul class="pagination justify-content-center my-4">
+              {getLetterList()}
             </ul>
         </nav>
     </header>
-  );
-}
-
-function ClassifyPage(props) {
-
-  const { classifyType } = useParams();
-
-  const [ letter , setLetter ] = useState( "A" );
-
-  const [ datas , setDatas ] = useState( [] );
-
-  useEffect( () => {
-    Api.getApiGamesWithClassify( letter , setDatas , classifyType );
-  }, [] );
-
-  const getClassifyTitle = () => {
-      if( classifyType.trim() !== "" ) {
-          let title = 'Liste de jeux PC classer par studios ou catégories';
-          if( classifyType === "studios" ) {
-              title = 'Liste de jeux PC classer par studios';
-          } else if( classifyType === "categories" ) {
-              title = 'Liste de jeux PC classer par catégories';
-          }
-          return title;
-      }
-      return null;
-  }
-
-  const empty = {
-      "id": 0,
-      "name": "",
-      "posterFile": "",
-      "description": "",
-      "releasedAt": "",
-      "comments": [ ],
-      "studios": [
-          {
-              "id": 0,
-              "name": ""
-          }
-      ],
-      "categories": [
-          {
-              "id": 0,
-              "name": ""
-          }
-      ]
-  }
-
-  //datas.forEach((data) => { return ({games: empty, ...data}); });
-  //console.log(datas);
-
-  return (
-    <div className="App">
-      <div className="container">
-        <h2 className="text-center mt-3 mb-4 user-select-none">{getClassifyTitle()}</h2>
-        <LetterSortList selectLetter={letter} updateLetter={setLetter} updateDatas={setDatas} classifyBy={classifyType} />
-        <GameClassify datasList={datas} classifyBy={classifyType} />
-      </div>
-    </div>
   );
 }
 
@@ -289,6 +212,40 @@ function HomePage(props) {
         <h2 className="text-center mt-3 mb-4 user-select-none">Liste de jeux PC</h2>
         <ButtonSortList updateGames={setGames} sortingOptions={props.sortingOptions} />
         <GameList games={games} sortingOptions={props.sortingOptions} />
+      </div>
+    </div>
+  );
+}
+
+function ClassifyPage(props) {
+
+  const { classifyType } = useParams();
+
+  const [ games , setGames ] = useState( [] );
+
+  useEffect( () => {
+    //Api.getApiGamesWithClassify("a" , setGames , classifyType);
+  }, [] );
+
+  const getClassifyTitle = () => {
+      if( classifyType.trim() !== "" ) {
+          let title = 'Liste de jeux PC classer par studios ou catégories';
+          if( classifyType === "studios" ) {
+              title = 'Liste de jeux PC classer par studios';
+          } else if( classifyType === "categories" ) {
+              title = 'Liste de jeux PC classer par catégories';
+          }
+          return (<h2>{title}</h2>);
+      }
+      return null;
+  }
+
+  return (
+    <div className="App">
+      <div className="container">
+        <h2 className="text-center mt-3 mb-4 user-select-none">{getClassifyTitle()}</h2>
+        <LetterSortList updateGames={setGames} classifyBy={classifyType} />
+        <GameClassify games={games} classifyBy={classifyType} />
       </div>
     </div>
   );
